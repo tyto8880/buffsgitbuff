@@ -1,0 +1,27 @@
+Initial Project Proposal
+------------------------
+Requirements:
+Username, Password
+Profile
+Settins page
+Schedule
+Presentation
+Dropdown menu
+Email service
+Database
+
+
+Features
+--------
+Injury stuff
+Diet
+Favorites system
+Notifications
+Goals
+Log
+
+
+Mission Statement
+-----------------
+Our website offers an efficient and customizable workout for you to pursue your goals and track your progress.
+We plan it out, you work it out.
