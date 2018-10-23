@@ -1,7 +1,7 @@
 #import sys
 #print(sys.version)
 import pymongo
-import heapq
+# import heapq
 
 client = pymongo.MongoClient("localhost",27017)
 db = client.test
@@ -42,8 +42,9 @@ OR
 
 """
 
-EXPLORATION_REWARD = 100.0#what is the extra reward given for trying a new exercise?
-EXERCISE_DROP_PROBABILITY = 0.05#when creating a workout, what is the chance that we ignore the current optimal?
+REST_TIME_BASE_SET = 5*60#seconds
+REST_TIME_BASE_REP = 40#seconds
+EXERCISE_DROP_PROBABILITY = 0.05
 
 """
 user is the actual item from the database
@@ -52,45 +53,44 @@ muscles is a list of desired muscle ids to get
 
 this version won't look for existing workouts yet
 """
-def createWorkout(user, time, muscles):
-	viableExercises = db.exercises.find({})
+def createWorkoutWeights(user, time, muscles):
+	viableExercises = db.exercises.find({"exerciseClass":"strength"})
 
-	dropCardioThreshold = user["cardio"]#anything over this threshold is automatically not included
-	dropStrengthThreshold = user["strength"]#maybe make these more complex
+	# dropCardioThreshold = user["cardio"]#anything over this threshold is automatically not included
+	# dropStrengthThreshold = user["strength"]#maybe make these more complex
 
 	includedExercises = []#maxheap of exercises
 
 	for exercise in viableExercises:
 		#trim down the set to only the viable ones
 		include = False
-		if (exercise["difficultyCardio"] <= dropCardioThreshold) and (exercise["difficultyStrength"] <= dropStrengthThreshold):
-			for exerciseMuscle in db.exercies["muscles"]:
-				if exerciseMuscle in muscles:
-					include = True
+		for exerciseMuscle in db.exercies["muscles"]:
+			if exerciseMuscle in muscles:
+				include = True
 		if include:
 			exercisePriority = 0.0
-			reps = 12
 			if exercise["exerciseid"] in user["favoriteExercises"]:
 				#
 				userFavorite = user["favoriteExercises"].index(exercise["exerciseid"])
 				exercisePriority = user["favoriteExercises"][userFavorite][1] + 1.0/userFavorite#assuming favoriteExercises is sorted in order of "favorite"ness
 				reps = user["favoriteExercises"][userFavorite][2]
 			else:
-				exercisePriority = EXPLORATION_REWARD - (user["cardio"] - exercise["difficultyCardio"])**2 - (user["strength"] - exercise["difficultyStrength"])**2
-				#exercise priority for an untried exercise is the default reward minus the difference between the user's levels in strength and cardio and the exercise's
-			heappush(includedExercises,(exercisePriority,(exercise,reps)))
+				exercisePriority = 100
+			heappush(includedExercises,(exercisePriority,exercise))
 
-	numOfSetsInWorkout = 4 + (user["cardio"])#how many sets in the workout? Ideally, this will be a more complex function of strength, cardio, time, etc.
 	workout = []
 	totalTime = 0
 
-	for setIndex in range(numOfSetsInWorkout):
-		#generate a new set
-		setTemp = []
-		exercisesInSet = 2 + int(user["cardio"]/4)
-		for ex in range(exercisesInSet):
-			exerciseTuple = heappop(includedExercises)
-			if random.uniform(0,1) >= EXERCISE_DROP_PROBABILITY:
-				setTemp.append(exerciseTuple[1])
-		workout.append(setTemp)
+	while(totalTime < time[0]):
+		while(random.uniform(0,1) < EXERCISE_DROP_PROBABILITY):
+			heappop(includedExercises)
+		exc = heappop(includedExercises)[1]
+		numSets = exc["baseSets"] * (user["cardio"] / 10) * (10 / (user["strength"]))
+		numReps = exc["baseReps"] * (user["cardio"] / 10) * (10 / (user["strength"]))
+		ttimeTemp = totalTime exc["timePerBaseSet"] * (exc["baseSets"] / numSets) + (REST_TIME_BASE_REP * (10 / user["cardio"]))
+		ttimeTemp += REST_TIME_BASE / user["cardio"]
+		if not((ttimeTemp > time[1]) and not (len(includedExercises) == 0)):
+			workout.append(exc)
+			totalTime = ttimeTemp
+		
 	return workout
