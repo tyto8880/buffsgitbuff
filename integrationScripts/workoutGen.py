@@ -1,7 +1,7 @@
 #import sys
 #print(sys.version)
 import pymongo
-# import heapq
+import heapq
 
 client = pymongo.MongoClient("localhost",27017)
 db = client.test
