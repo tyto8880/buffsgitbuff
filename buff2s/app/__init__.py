@@ -2,7 +2,7 @@ from flask import Flask
 from config import Config
 
 # creates new app instance
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 # loads configuration vars
 app.config.from_object(Config)
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<style>
+.container{
+	padding:16px;
+	background-color: 
+}
+body {
+	box-sizing: border-box;
+	background="background.jpg";
+	margin-left: 15px;
+}
+input[type=text],input[type=password]{
+	width: 50%;
+	padding: 15px;
+	margin: 5px 0 22px 0;
+	display: inline-block;
+	border: none;
+	background: #A9A9A9;
+}
+input[type=checkbox]{
+	display: inline-block;
+}
+button.cancel{
+	background-color: red;
+	color: white;
+}
+.signup{
+	background-color: green;
+	color: white;
+}
+
+
+</style>
+<body background="background.jpg">
+<form action="/action_page.php" style="border:1px solid #ccc; background: rgba(255, 255,255, .9) ">
+	<div class="container">
+		<h1>Sign Up To Become a Buff Buff</h1>
+			<p>Fill this form out to start getting buff!</p>
+		<hr>
+		
+		<label for="usrname"><b>Choose a Username...</br></label>
+		<input type="text" placeholder="Enter Username" name="usrname" required></br>
+		
+		<label for ="email"><b>Email</br></label>
+		<input type="text" placeholder="Enter Email" name ="email" required></br>
+		
+		<label for ="psw"><b>Choose a password... or not, whatever.</br></label>
+		<input type="password" placeholder="Enter Password" name="psw" required></br>
+		
+		<label for="psw repeat"><b>Repeat Password to make sure you're not drunk.</br>
+		</label>
+		<input type = "password" placeholder="Repeat Password" name="psw-repeat" required></br>
+		
+		<label for ="ssn"><b>Social Security Number (trust us, we need it)</br></label>
+		<input type="text" id="ssn" name="ssn" placeholder="555-55-5555" pattern="\d{3}-?\d{2}-?\d{4}" required></br></br>
+		
+		<label>
+		<input type="checkbox" checked="checked" name="disclamer" style="margin-bottom:15px" required>I understand that the creators 
+		of this site have no formal training and I will not sue them for injuries sustained to myself.  I choose to trust
+		them instead because I mean, come on, look at their muscles.</br></br>
+		</label>
+		<div class="buttons">
+			<button type="button" class="cancel">Cancel</button>
+			<button type="submit" class="signup">Get Buff</button>
+		</div>
+	</div>
+		
+</form>
+</body>
+</html>
