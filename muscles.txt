@@ -1,0 +1,16 @@
+db.muscles.insertMany([
+{muscle_id: 0, muscle: "Miscellaneous"}, 
+{muscle_id: 1, muscle: "Quadriceps"}, 
+{muscle_id: 2, muscle: "Hamstrings"}, 
+{muscle_id: 3, muscle: "Calves"}, 
+{muscle_id: 4, muscle: "Chest"}, 
+{muscle_id: 5, muscle: "Back"}, 
+{muscle_id: 6, muscle: "Shoulders"}, 
+{muscle_id: 7, muscle: "Triceps"}, 
+{muscle_id: 8, muscle: "Biceps"}, 
+{muscle_id: 9, muscle: "Forearms"}, 
+{muscle_id: 10, muscle: "Trapezius"}, 
+{muscle_id: 11, muscle: "Abs"}, 
+{muscle_id: 12, muscle: "Glutes"}, 
+{muscle_id: 13, muscle: "Lats"}
+]);
