@@ -9,7 +9,7 @@ uname is the user's username
 pwd is the user's password (not sure if we'd pass this or just the password hash to the server)
 """
 def get_user_info(uname,pwd):
-	info = db.Users.find({"username":uname}
+	info = db.Users.find({"username":uname})
 	#make sure the user exists
 	if(len(info) == 0):
 		return False

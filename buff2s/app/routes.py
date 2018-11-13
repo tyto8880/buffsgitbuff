@@ -2,7 +2,7 @@
 from app import app
 
 # import template class
-from flask import render_template
+from flask import render_template, request
 from app.forms import LoginForm
 
 
