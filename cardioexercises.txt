@@ -1,0 +1,17 @@
+db.cardioexercises.insertMany([
+{exercise_id: 16, exercise: "Free Skating", equipment: 41, muscles: [1, 3]}, 
+{exercise_id: 21, exercise: "Hockey", equipment: 41, muscles: [1, 3]}, 
+{exercise_id: 22, exercise: "Jogging", equipment: [45, 81], muscles: [0, 1, 2, 3]}, 
+{exercise_id: 51, exercise: "Sprinting", equipment: 45, muscles: [0, 1, 2, 3, 12]}, 
+{exercise_id: 65, exercise: "Cardio-Row", equipment: 70, muscles: [1, 5, 10]}, 
+{exercise_id: 66, exercise: "Agility Drill", equipment: [0, 5,6], muscles: 3}, 
+{exercise_id: 67, exercise: "Jump Rope", equipment: 47, muscles: [1, 2, 3]}, 
+{exercise_id: 68, exercise: "Rope Swing", equipment: 39, muscles: [6, 7]}, 
+{exercise_id: 69, exercise: "Bike", equipment: [7, 66, 72, 84, 88], muscles: [1, 2, 3, 12]}, 
+{exercise_id: 70, exercise: "Elliptical", equipment: 27, muscles: [1, 2, 3, 12]}, 
+{exercise_id: 71, exercise: "Swimming", equipment: 50, muscles: [2, 3, 4,5, 6, 8]}, 
+{exercise_id: 72, exercise: "Diving", equipment: 24, muscles: 0}, 
+{exercise_id: 73, exercise: "Climbing", equipment: [17, 52, 79], muscles: [1, 3, 6, 7, 8, 9, 13]},
+{exercise_id: 75, exercise: "Rock Climbing", equipment:[17, 79], muscles: [2,3,4,5,6,9]}, 
+{exercise_id: 76, exercise: "Basketball", equipment: 14, muscles: [1,2,3,12]}
+]);
