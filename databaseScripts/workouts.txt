@@ -1,0 +1,5 @@
+db.Workouts.insertMany([
+{workout_id:1, exercises:[2,3], workout_name:"back explosion"},
+{workout_id:2, exercises:[7,47], workout_name:"bicep attack"},
+{workout_id:3, exercises:[24, 25], workout_name:"heart attack"},
+{workout_id:4, exercises:[56, 4], workout_name:"squatalot"}]);
