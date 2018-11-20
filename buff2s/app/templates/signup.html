@@ -44,29 +44,31 @@
 				<!-- Each has a VALUE which is what will be read by the routes.py file-->
 				
 				<label> Username </label>
-					<input name = "Username" type = "text" value = {{Username}}></br>
+					<input name = "Username" type = "text" value = {{request.form.username}}></br>
 				
 				
 				<label> Email </label>
-					<input name = "email" type = "text" value = {{email}}></br>
+					<input name = "email" type = "text" value = {{request.form.email}}></br>
 				
 				<label> Password </label>
-				<input name = "password" type = "text" value = {{psw_1}}></br>
+				<input name = "password" type = "password" value = {{request.form.password}}></br>
 				
 				<label> Confirm Password </label>
-				<input name = "confirm_pass" type = "text" value = {{pwd_2}}></br>
+				<input name = "confirm_pass" type = "password" value = {{request.form.password}}></br>
 				
-
 				<label>
 				<input type="checkbox" checked="checked" name="disclamer" style="margin-bottom:15px" value = {{true}} >I accept the Terms and Conditions
 				</br></br></label>
 
 				<div class="buttons">
-					<button type="button" class="cancel">Cancel</button>
-					<button type="submit" class="signup">Get Buff</button>
+					<button type="button" class="cancel" value = "Cancel" > Cancel </button>
+					<button type="submit" class="signup" value = "Login" > Get Buff </button>
 				</div>
 
-			</div>		
+				{% if error %}
+        			<p class="error"><strong>Error:</strong> {{ error }}
+      			{% endif %}
+				</div>		
 		</form>
 	</body>
 
