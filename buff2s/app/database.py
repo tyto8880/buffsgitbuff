@@ -26,10 +26,6 @@ def get_user_info(uname, pwd):
 	return info
 
 
-def test_db(uname, pwd):
-	db.users.insert_one({'test2': 'test2'})
-
-
 # may need to also pass other settings here
 def create_user(uname, pwd):
 	if db.users.find_one({"username": uname}) is not None:
