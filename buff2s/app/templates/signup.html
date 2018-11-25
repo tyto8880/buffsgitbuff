@@ -4,11 +4,9 @@
 	<style>
 	.container{
 		padding:16px;
-		background-color: 
 	}
 	body {
 		box-sizing: border-box;
-		background="background.jpg";
 		margin-left: 15px;
 	}
 	input[type=text],input[type=password]{
@@ -32,10 +30,10 @@
 	}
 	</style>
 
-	<body background="background.jpg">
+	<body>
 		<!-- The 'action' is for the background to have both image and signup background
 			Also the method= POST is for the main.py file (i.e. ROUTES.PY) -->
-		<form action="/action_page.php" style="border:1px solid #ccc; background: rgba(255, 255,255, .9)" method='POST'>
+		<form method="post">
 			<div class="container">
 				<!-- I HAVE AN ERROR CHECK FOR EACH INPUT TO MAKE SURE ITS VALID, thats all preference-->
 				<h1>Become a Buff getting Buff, Today!</h1>
@@ -43,22 +41,25 @@
 
 				<!-- Each has a VALUE which is what will be read by the routes.py file-->
 				
-				<label> Username </label>
-					<input name = "Username" type = "text" value = {{request.form.username}}></br>
+				<label for="username"> Username </label>
+                    <input name="username" id="username" type="text" value = {{request.form.username}}>
+				<br>
 				
+				<label for="email"> Email </label>
+					<input name="email" id="email" type="text" value={{request.form.email}}>
+				<br>
 				
-				<label> Email </label>
-					<input name = "email" type = "text" value = {{request.form.email}}></br>
+				<label for="password"> Password </label>
+				    <input name="password" id="password" type="password" value = {{request.form.password}}>
+				<br>
 				
-				<label> Password </label>
-				<input name = "password" type = "password" value = {{request.form.password}}></br>
-				
-				<label> Confirm Password </label>
-				<input name = "confirm_pass" type = "password" value = {{request.form.password}}></br>
+				<label for="cpass"> Confirm Password </label>
+				    <input name="confirm_pass" id="cpass" type="password" value = {{request.form.password}}>
+				<br>
 				
 				<label>
 				<input type="checkbox" checked="checked" name="disclamer" style="margin-bottom:15px" value = {{true}} >I accept the Terms and Conditions
-				</br></br></label>
+                </label>
 
 				<div class="buttons">
 					<button type="button" class="cancel" value = "Cancel" > Cancel </button>

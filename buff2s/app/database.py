@@ -2,53 +2,57 @@ import pymongo
 from passlib.hash import pbkdf2_sha256 as pl
 import heapq
 
-client = pymongo.MongoClient("localhost",27017)
-db = client.Buffs
+client = pymongo.MongoClient("localhost", 27017)
+db = client.test
 
-REST_TIME_BASE_SET = 5*60#seconds
-REST_TIME_BASE_REP = 40#seconds
+REST_TIME_BASE_SET = 5*60  # seconds
+REST_TIME_BASE_REP = 40  # seconds
 EXERCISE_DROP_PROBABILITY = 0.05
+
 
 """
 uname is the user's username
 pwd is the user's password (not sure if we'd pass this or just the password hash to the server)
 """
-def get_user_info(uname,pwd):
-	info = db.Users.find_one({"username":uname})
-	#make sure the user exists
+def get_user_info(uname, pwd):
+	info = db.users.find_one({"username": uname})
+	# make sure the user exists
 	if(len(info) == 0):
 		return False
-	#now verify their password
+	# now verify their password
 	pwh = info["passwordHash"]
-	if not pl.verify(pwd,pwh):
+	if not pl.verify(pwd, pwh):
 		return False
 	return info
 
-"""
-may need to also pass other settings here
-"""
-def create_user(uname,pwd):
-	if(db.Users.find_one({"username":uname}) is not None):
-		#a user with this username already exists
+
+def test_db(uname, pwd):
+	db.users.insert_one({'test2': 'test2'})
+
+
+# may need to also pass other settings here
+def create_user(uname, pwd):
+	if db.users.find_one({"username": uname}) is not None:
+		# a user with this username already exists
 		return False
 	
-	pwh = pl.hash(pwd)#salt included in the hash
-	db.Users.insertOne({"username":uname,
-						"pwh":pwh,
-						"favoriteExercises":[],
-						"cardio":-1,
-						"strength":-1})
+	pwh = pl.hash(pwd)  # salt included in the hash
+	db.users.insert_one({"username": uname,
+						"pwh": pwh,
+						"favoriteExercises": [],
+						"cardio": -1,
+						"strength": -1})
 	return True
 
-"""
-delete this user. Don't do anything if it doesn't exist or they had the wrong password
-"""
-def del_user(uname,pwd):
+
+# delete this user. Don't do anything if it doesn't exist or they had the wrong password
+def del_user(uname, pwd):
 	q = db.Users.find_one({"username":uname})
 	if (q is None) or not pl.verify(pwd,q["pwh"]):
 		return False
 	db.Users.deleteOne({"_id":q["_id"]})
 
+'''
 """
 user is the actual item from the database
 time is a range of acceptable times, stored as a tuple of (min,max); IGNORED FOR NOW
@@ -127,3 +131,4 @@ def workoutToStringList(workout,user):
 				excq = exercise[1] + " sec" if exercise[1] < 60 else ((exercise[1] / 60) + " min" if ((exercise[1]/60) < 60) else (exercise[1]/3600) + " hr")
 		wkt.append(excname + ", " + excq)
 	return wkt
+'''
