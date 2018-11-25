@@ -12,7 +12,7 @@ import app.validation as validate
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('base.html', title='Home')
+    return render_template('home.html', title='Home')
 
 
 @app.route('/login')
