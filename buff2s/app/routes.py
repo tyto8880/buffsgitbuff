@@ -1,8 +1,8 @@
 # imports application module from app directory
 from app import app
+from flask import render_template, request, redirect, g
 
-# import template class
-from flask import render_template, request, redirect
+# local imports for some of that sweet sweet sugar
 import app.database as db
 import app.validation as validate
 
@@ -14,21 +14,27 @@ def home():
     return render_template('home.html', title='Home')
 
 
+# login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         # handle user not present
         if validate.valid_user(request.form['username'], request.form['password']) and db.get_user_info(request.form['username'], request.form['password']):
+            if not g.user:
+                g.user = request.form['username']
             return redirect('/user/' + request.form['username'])
     return render_template('login.html')
 
 
+# signup page
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # provide handling for taken user
-        if validate.valid_user(request.form['username'], request.form['password']):
+        # provide handling for taken user and invalid username
+        if validate.valid_user(request.form['username'], request.form['password']) and not db.get_user_info(request.form['username'], request.form['password']):
             db.create_user(request.form['username'], request.form['password'])
+            if not g.user:
+                g.user = request.form['username']
 
     return render_template('signup.html')
 

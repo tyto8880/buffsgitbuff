@@ -6,11 +6,17 @@
 </head>
 <body>
     <div>Helpful Links:
-        <a href='/home'>Home</a>
-        <a href='/login'>Login</a>
-        <a href='/signup'>Signup</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        {% if not g.user %}
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+            <a href="{{ url_for('login') }}">Log In</a>
+        {% endif %}
+        {% if g.user %}
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        {% endif %}
+        {% block menuitem %}{% endblock %}
     </div>
     <hr>
-        {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </body>
 </html>
