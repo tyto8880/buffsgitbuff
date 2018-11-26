@@ -17,7 +17,8 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if validate.valid_user(request.form['username'], request.form['password']):
+        # handle user not present
+        if validate.valid_user(request.form['username'], request.form['password']) and db.get_user_info(request.form['username'], request.form['password']):
             return redirect('/user/' + request.form['username'])
     return render_template('login.html')
 

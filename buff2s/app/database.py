@@ -16,13 +16,10 @@ pwd is the user's password (not sure if we'd pass this or just the password hash
 """
 def get_user_info(uname, pwd):
 	info = db.users.find_one({"username": uname})
-	# make sure the user exists
-	if(len(info) == 0):
+
+	if not info or info and not pl.verify(pwd, info["pwh"]):
 		return False
-	# now verify their password
-	pwh = info["passwordHash"]
-	if not pl.verify(pwd, pwh):
-		return False
+
 	return info
 
 
@@ -68,7 +65,7 @@ def createWorkout(user, time, muscles, isWeights):
 	for exercise in viableExercises:
 		#trim down the set to only the viable ones
 		include = False
-		for exerciseMuscle in db.exercies["muscles"]:
+		for exerciseMuscle in db.exercises["muscles"]:
 			if exerciseMuscle in muscles:
 				include = True
 		if include:
