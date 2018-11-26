@@ -7,11 +7,11 @@
 <body>
     <div>Helpful Links:
         <a href="{{ url_for('home') }}">Home</a>
-        {% if not g.user %}
+        {% if not session['username'] %}
             <a href="{{ url_for('signup') }}">Sign Up</a>
             <a href="{{ url_for('login') }}">Log In</a>
         {% endif %}
-        {% if g.user %}
+        {% if session['username'] %}
             <a href="{{ url_for('logout') }}">Log Out</a>
         {% endif %}
         {% block menuitem %}{% endblock %}

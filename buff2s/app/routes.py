@@ -49,6 +49,6 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    if g.user:
-        g.user = None
+    if session['username']:
+        session.clear()
     return redirect('/home')
