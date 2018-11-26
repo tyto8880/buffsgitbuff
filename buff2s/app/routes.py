@@ -2,8 +2,7 @@
 from app import app
 
 # import template class
-from flask import render_template, request
-# from app.forms import LoginForm
+from flask import render_template, request, redirect
 import app.database as db
 import app.validation as validate
 
@@ -15,16 +14,24 @@ def home():
     return render_template('home.html', title='Home')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    # form = LoginForm()
-    return render_template('login.html', title='Sign In')
+    if request.method == 'POST':
+        if validate.valid_user(request.form['username'], request.form['password']):
+            return redirect('/user/' + request.form['username'])
+    return render_template('login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        # provide handling for taken user
         if validate.valid_user(request.form['username'], request.form['password']):
             db.create_user(request.form['username'], request.form['password'])
 
-    return render_template('signup.html', title='Sign Up')
+    return render_template('signup.html')
+
+
+@app.route('/user/<user>')
+def userdash(user):
+    return render_template('user.html')
