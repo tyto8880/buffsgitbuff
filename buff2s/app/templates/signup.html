@@ -32,9 +32,9 @@ button.cancel{
 </style>
 
 {% block content %}
-<body>
-    <!-- The 'action' is for the background to have both image and signup background
-        Also the method= POST is for the main.py file (i.e. ROUTES.PY) -->
+<!-- The 'action' is for the background to have both image and signup background
+    Also the method= POST is for the main.py file (i.e. ROUTES.PY) -->
+
     <form method="post">
         <div class="container">
             <!-- I HAVE AN ERROR CHECK FOR EACH INPUT TO MAKE SURE ITS VALID, thats all preference-->
@@ -69,10 +69,9 @@ button.cancel{
             </div>
 
             {% if error %}
-                <p class="error"><strong>Error:</strong> {{ error }}
+                <script> alert('{{ error }}'); </script>
             {% endif %}
             </div>
     </form>
-</body>
 {% endblock %}
 

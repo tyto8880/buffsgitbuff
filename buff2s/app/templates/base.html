@@ -13,6 +13,7 @@
             <a href="{{ url_for('login') }}">Log In</a>
         {% endif %}
         {% if session['username'] %}
+            <a href="{{ url_for('userdash', user=session['username']) }}">Your Page</a>
             <a href="{{ url_for('logout') }}">Log Out</a>
         {% endif %}
         {% block menuitem %}{% endblock %}
