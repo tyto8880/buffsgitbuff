@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup{% endblock %}
+
+<style>
+.container{
+    padding:16px;
+}
+body {
+    box-sizing: border-box;
+    margin-left: 15px;
+}
+input[type=text],input[type=password]{
+    width: 50%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #A9A9A9;
+}
+input[type=checkbox]{
+    display: inline-block;
+}
+button.cancel{
+    background-color: red;
+    color: white;
+}
+.signup{
+    background-color: green;
+    color: white;
+}
+</style>
+
+{% block content %}
+<body>
+    <!-- The 'action' is for the background to have both image and signup background
+        Also the method= POST is for the main.py file (i.e. ROUTES.PY) -->
+    <form method="post">
+        <div class="container">
+            <!-- I HAVE AN ERROR CHECK FOR EACH INPUT TO MAKE SURE ITS VALID, thats all preference-->
+            <h1>Become a Buff getting Buff, Today!</h1>
+            <h1>Sign Up</h1>
+
+            <!-- Each has a VALUE which is what will be read by the routes.py file-->
+
+            <label for="username"> Username </label>
+                <input name="username" id="username" type="text" value = {{request.form.username}}>
+            <br>
+
+            <label for="email"> Email </label>
+                <input name="email" id="email" type="text" value={{request.form.email}}>
+            <br>
+
+            <label for="password"> Password </label>
+                <input name="password" id="password" type="password" value = {{request.form.password}}>
+            <br>
+
+            <label for="cpass"> Confirm Password </label>
+                <input name="confirm_pass" id="cpass" type="password" value = {{request.form.password}}>
+            <br>
+
+            <label>
+            <input type="checkbox" checked="checked" name="disclamer" style="margin-bottom:15px" value = {{true}} >I accept the Terms and Conditions
+            </label>
+
+            <div class="buttons">
+                <button type="button" class="cancel" value = "Cancel" > Cancel </button>
+                <button type="submit" class="signup" value = "Login" > Get Buff </button>
+            </div>
+
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
+            </div>
+    </form>
+</body>
+{% endblock %}
+
