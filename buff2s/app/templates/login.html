@@ -1,35 +1,35 @@
-{% extends "header.html" %}
-{% block body %}
-<body background="background.jpg">
-<form action="" class="form-inline" method="post" style="border:1px solid #ccc; background: rgba(255, 255,255, .9) ">
-	<div class="container">
-		<h1>Sign Up To Become a Buff Buff</h1>
-			<p>Fill this form out to start getting buff!</p>
-		<hr>
-		<label for="username"><br>Choose a Username...</br> </label>
-		<input type="text" class="form-control" placeholder="Enter Username" name="username" value = "{{ request.form.username }}"></br>
-        <!--
-		<label for ="email"><br>Email</br> </label>
-		<input type="text" placeholder="Enter Email" name ="email"></br>
-		<label for ="psw"><br>Choose a password... or not, whatever.</br> </label>
-		<input type="password" placeholder="Enter Password" name="psw"></br>
-		<label for="psw repeat"><br>Repeat Password to make sure you're not drunk.</br>
-		</label>
-		<input type = "password" placeholder="Repeat Password" name="psw-repeat"></br>
-		<label for ="ssn"><br>Social Security Number (trust us, we need it)</br> </label>
-		<input type="text" id="ssn" name="ssn" placeholder="555-55-5555" pattern="\d{3}-?\d{2}-?\d{4}"></br></br>
-		<label>
-		<input type="checkbox" checked="checked" name="disclamer" style="margin-bottom:15px">I understand that the creators
-		of this site have no formal training and I will not sue them for injuries sustained to myself.  I choose to trust
-		them instead because I mean, come on, look at their muscles.</br></br>
-		</label>
-		-->
-		<div class="buttons">
-			<button type="button" class="cancel" >Cancel</button>
-			<button type="submit" class = "btn btn-default" value="Login">Get Buff</button>
-		</div>
-	</div>
+{% extends 'base.html' %}
 
-</form>
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<body>
+    <!-- The 'action' is for the background to have both image and signup background
+        Also the method= POST is for the main.py file (i.e. ROUTES.PY) -->
+    <form method="post">
+        <div class="container">
+            <!-- I HAVE AN ERROR CHECK FOR EACH INPUT TO MAKE SURE ITS VALID, thats all preference-->
+            <h1>Thanks for returning!</h1>
+            <h1>Sign Up</h1>
+
+            <!-- Each has a VALUE which is what will be read by the routes.py file-->
+
+            <label for="username"> Username </label>
+                <input name="username" id="username" type="text" value = {{request.form.username}}>
+            <br>
+
+            <label for="password"> Password </label>
+                <input name="password" id="password" type="password" value = {{request.form.password}}>
+            <br>
+
+            <div class="buttons">
+                <button type="button" class="cancel" value = "Cancel" > Cancel </button>
+                <button type="submit" class="signup" value = "Login" > Get Buff </button>
+            </div>
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
+            </div>
+    </form>
 </body>
 {% endblock %}

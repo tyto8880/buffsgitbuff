@@ -1,14 +1,23 @@
-<html>
-    <head>
-        <title>Buffs get Buff!</title>
-    </head>
-    <body> 
-        <div>Helpful Links:
-            <a href='/home'>Home</a>
-            <a href='/login'>Login</a>
-            <a href='/signup'>Signup</a>
-        </div>
-        <hr>
-            {% block content %}{% endblock %}
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} - Buffs get Buff!</title>
+</head>
+<link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
+<body>
+    <div>Helpful Links:
+        <a href="{{ url_for('home') }}">Home</a>
+        {% if not session['username'] %}
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+            <a href="{{ url_for('login') }}">Log In</a>
+        {% endif %}
+        {% if session['username'] %}
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        {% endif %}
+        {% block menuitem %}{% endblock %}
+    </div>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
 </html>
