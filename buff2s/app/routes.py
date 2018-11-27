@@ -30,7 +30,7 @@ def login():
     error = None
     if request.method == 'POST':
         # handle user not present
-        if validate.valid_user(request.form['username'], request.form['password']) and db.get_user_info(request.form['username'], request.form['password']):
+        if validate.valid_user(request.form['username'], request.form['password']) and db.validateUser(request.form['username'], request.form['password']):
             session.clear()
             session['username'] = request.form['username']
             return redirect('/user/' + request.form['username'])
@@ -46,9 +46,7 @@ def signup():
     if request.method == 'POST':
         # provide handling for taken user and invalid username
         if validate.valid_user(request.form['username'], request.form['password']):
-            if not db.get_user_info(request.form['username'], request.form['password']):
-                db.create_user(request.form['username'], request.form['password'])
-            else:
+            if not db.createUser(request.form['username'], request.form['email'], request.form['password']):
                 error = 'Username already taken!'
         else:
             error = 'Invalid username/password!'
