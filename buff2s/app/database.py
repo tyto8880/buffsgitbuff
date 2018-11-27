@@ -1,6 +1,7 @@
 import pymongo
 from passlib.hash import pbkdf2_sha256 as pl
-import heapq
+import heapq as hq
+import numpy as np
 
 client = pymongo.MongoClient("localhost", 27017)
 db = client.test
@@ -45,7 +46,7 @@ def del_user(uname, pwd):
 		return False
 	db.Users.deleteOne({"_id":q["_id"]})
 
-'''
+
 """
 user is the actual item from the database
 time is a range of acceptable times, stored as a tuple of (min,max); IGNORED FOR NOW
@@ -53,12 +54,9 @@ muscles is a list of desired muscle ids to get
 """
 def createWorkout(user, time, muscles, isWeights):
 	if(isWeights):
-		viableExercises = db.exercises.find({"exerciseClass":"strength"})
+		viableExercises = db.strengthExercises.find({})
 	else:
-		viableExercises = db.exercises.find({"exerciseClass":"cardio"})
-
-	# dropCardioThreshold = user["cardio"]#anything over this threshold is automatically not included
-	# dropStrengthThreshold = user["strength"]#maybe make these more complex
+		viableExercises = db.cardioExercises.find({"exerciseClass":"cardio"})
 
 	includedExercises = []#maxheap of exercises
 
@@ -77,27 +75,27 @@ def createWorkout(user, time, muscles, isWeights):
 				reps = user["favoriteExercises"][userFavorite][2]
 			else:
 				exercisePriority = 100
-			heappush(includedExercises,(exercisePriority,exercise))
+			hq.heappush(includedExercises,(exercisePriority,exercise))
 
 	workout = []
 	totalTime = 0
 
 	while(totalTime < time[0]):
-		while(random.uniform(0,1) < EXERCISE_DROP_PROBABILITY):
-			heappop(includedExercises)
-		exc = heappop(includedExercises)[1]
+		while(np.random.uniform(0,1) < EXERCISE_DROP_PROBABILITY):
+			hq.heappop(includedExercises)
+		exc = hq.heappop(includedExercises)[1]
 		if(isWeights):
 			numSets = exc["baseSets"] * (user["cardio"] / 10) * (10 / (user["strength"]))
 			numReps = exc["baseReps"] * (user["cardio"] / 10) * (10 / (user["strength"]))
-			ttimeTemp = totalTime exc["timePerBaseSet"] * (exc["baseSets"] / numSets) + (REST_TIME_BASE_REP * (10 / user["cardio"]))
-			ttimeTemp += REST_TIME_BASE / user["cardio"]
+			ttimeTemp = totalTime + exc["timePerBaseSet"] * (exc["baseSets"] / numSets) + (REST_TIME_BASE_REP * (10 / user["cardio"]))
+			ttimeTemp += REST_TIME_BASE_SET / user["cardio"]
 		else:
 			if exc["unitType"] == "time":
 				time = exc["baseTime"] * (user["cardio"] / 10)
 			else:
 				#dist
 				time = (exc["baseSpeed"] / exc["baseDist"]) * (user["cardio"] / 10)#endurance here?
-			ttimeTemp = time + REST_TIME_BASE / user["cardio"]
+			ttimeTemp = time + REST_TIME_BASE_SET / user["cardio"]
 		if not((ttimeTemp > time[1]) and not (len(includedExercises) == 0)):
 			workout.append([exc])
 			totalTime = ttimeTemp
@@ -109,7 +107,7 @@ want to use user's preferred units, base units are si
 """
 def workoutToStringList(workout,user):
 	wkt = []
-	isWeights = workout[0][0]["exerciseClass"] == "strength"
+	isWeights = workout[0][0] in db.strengthExercises.find({})
 	isDist = False
 	if not isWeights:
 		isDist = workout[0][0]["unitType"] == "distance"
@@ -124,4 +122,3 @@ def workoutToStringList(workout,user):
 				excq = exercise[1] + " sec" if exercise[1] < 60 else ((exercise[1] / 60) + " min" if ((exercise[1]/60) < 60) else (exercise[1]/3600) + " hr")
 		wkt.append(excname + ", " + excq)
 	return wkt
-'''
