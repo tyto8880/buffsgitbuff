@@ -1,6 +1,6 @@
 # imports application module from app directory
 from app import app
-from flask import render_template, request, redirect, g, session
+from flask import render_template, request, redirect, session
 
 # local imports for some of that sweet sweet sugar
 import app.database as db
