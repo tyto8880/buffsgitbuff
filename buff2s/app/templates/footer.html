@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+				<p>
+					&copy; BuffGitBuff Team 2018
+				</p>
+
+				<a href = "http://twitter.com"> <img src = "{{ url_for('static', filename = 'twitter.png') }}" alt = "Twitter" style = "width:40px;height:40px;"></a>
+				<a href = "http://facebook.com"> <img src = "{{ url_for('static', filename = 'facebook.png') }}" alt="Facebook" style = "width:40px;height:40px;"></a>
+                <a href = "http://google.com"> <img src = "{{ url_for('static', filename = 'google.png.jpg') }}" alt = "Google" style = "width:40px;height:40px;"></a>
+</body>
+
+<body>
+    <div class = "container-fluid" style = "position: absolute; bottom: 0;">
+    {% block body %}{% endblock %}
+    </div>
+</body>
+
+</html>
