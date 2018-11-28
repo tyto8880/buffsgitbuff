@@ -1,3 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ session['username'] }}'s Workout Page{% endblock %}
+{% block title %}{{ user.username }}'s Workout Page{% endblock %}
+
+{% block content %}
+<h1>
+    {{ user.username }}'s page!
+</h1>
+{% endblock %}

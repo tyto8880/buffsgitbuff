@@ -9,7 +9,8 @@ import app.validation as validate
 
 @app.route('/user/<user>')
 def userdash(user):
-    return render_template('user.html')
+    userInfo = db.getUserInfo(user)
+    return render_template('user.html', user=userInfo)
 
 
 # base webpage
