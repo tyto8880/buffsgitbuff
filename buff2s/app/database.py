@@ -1,7 +1,8 @@
 import pymongo
 from passlib.hash import pbkdf2_sha256 as pl
-import heapq as hq
+# import heapq as hq
 import numpy as np
+from scipy import stats
 
 client = pymongo.MongoClient("localhost", 27017)
 db = client.buffs
@@ -11,6 +12,12 @@ REST_TIME_BASE_SET = 5*60  # seconds
 REST_TIME_BASE_REP = 40  # seconds
 EXERCISE_DROP_PROBABILITY = 0.05
 
+class ExerciseNotDefinedException(Exception):
+	def __init__(self, text):
+		self.ermsg = text
+
+	def __str__(self):
+		return repr(self.ermsg)
 
 """
 Check that the user both exists and has the correct password
@@ -72,78 +79,78 @@ addWorkoutToUserFavorites(wid,user): Add the workout with id wid to user's favor
 """
 
 """
-TODO: Refactor this
-need to have specific workouts look like dict:
+Add the workoutID to this user's list of favorite workouts.
+"""
+def addWorkoutToUserFavorites(workoutID, username):
+	#get the actual dicts associated with this workout and username
+	user = db.users.find_one({"username":username})
+	workout = db.workouts.find_one({"_id":workoutID})
+
+	if not (user and workout):
+		return False #either the user or the workout didn't exist
+
+	favs = user["favoriteWorkouts"]
+	favs.append(workoutID)
+	db.users.update_one({"_id":user["_id"]},{"$set":{"favoriteWorkouts":favs}})
+	return True
+
+"""
+Get the workout with this id and generate the user-specific values for sets and reps, returned as a dictionary with format:
 
 {
-"exercises":[] of workouts,
-"muscles":[] of 
+"workoutID" : _id of workout in datbase,
+"exercises" : [] of exercise NAMES, in order,
+"sets" : [] of ints corresponding to the number of sets for each exercise, same order as exercises [OPTIONAL; for strength],
+"reps" : [] of ints corresponding to the number of reps for each exercise, same order as exercises [OPTIONAL; for strength],
+"times" : [] of ints (units: seconds) corresponding to the length of time to do a certain exercise [OPTIONAL; for cardio]
 }
-need output to look like a workout object from database collection workouts
-
-user is the actual item from the database
-time is a range of acceptable times, stored as a tuple of (min,max); IGNORED FOR NOW
-muscles is a list of desired muscle ids to get
 """
+def getWorkoutFromIDForUser(workoutID,username):
+	user = db.users.find_one({"username": username})
+	workout = db.workouts.find_one({"_id": workoutID})
+	if not (user and workout):
+		return False #either the user or the workout didn't exist
 
-'''
-def createWorkout(user, time, muscles, isWeights):
-	if(isWeights):
-		viableExercises = db.exercises.find({"exerciseClass":"strength"})
-	else:
-		viableExercises = db.exercises.find({"exerciseClass":"cardio"})
+	wkclass = workout["exerciseClass"]
+	wkt = {}
+	if wkclass == 'strength':
+		wkt = {"workoutName":workout["workoutName"],
+			   "workoutID":workoutID,
+			   "exercises":[],
+			   "sets":[],
+			   "reps":[],}
+	if wkclass == 'cardio':
+		wkt = {"workoutName":workout["workoutName"],
+			   "workoutID":workoutID,
+			   "exercises":[],
+			   "times":[]}
 
-	includedExercises = []#maxheap of exercises
+	#complicated bit, this is where we do the scaling
+	for exerciseID in workout["exercises"]:
+		#scale each exercise's sets & reps or times
+		exercise = db.exercises.find_one({"_id":exerciseID}) #get the actual dict
+		if not exercise:
+			raise ExerciseNotDefinedException("Exercise with id " + exerciseID + " was not found during building of workout.")
 
-	for exercise in viableExercises:
-		#trim down the set to only the viable ones
-		include = False
-		for exerciseMuscle in db.exercises["muscles"]:
-			if exerciseMuscle in muscles:
-				include = True
-		if include:
-			#TODO: get rid of buffs.users["favoriteExercises"] references
-			exercisePriority = 0.0
-			if exerciseInUserFavorites(user,exercise):
-				exercisePriority = 2
-			else:
-				exercisePriority = 1
-			hq.heappush(includedExercises,(exercisePriority,exercise))
+		wkt["exercises"].append(exercise)
 
-	workout = []
-	totalTime = 0
-
-	while(totalTime < time[0]):
-		while(np.random.uniform(0,1) < EXERCISE_DROP_PROBABILITY):
-			hq.heappop(includedExercises)
-		exc = hq.heappop(includedExercises)[1]
-		if(isWeights):
-			numSets = exc["baseSets"] * (user["cardioLevel"] / 10) * (10 / (user["strengthLevel"]))
-			numReps = exc["baseReps"] * (user["cardioLevel"] / 10) * (10 / (user["strengthLevel"]))
-			ttimeTemp = totalTime + numReps*BASE_TIME_PER_REP/user["cardioLevel"] + (exc["baseSets"] / numSets) + (REST_TIME_BASE_REP * (10 / user["cardioLevel"]))
-			ttimeTemp += REST_TIME_BASE_SET / user["cardioLevel"]
-		else:
-			time = exc["baseTime"] * (user["cardioLevel"] / 10)
-			ttimeTemp = time + REST_TIME_BASE_SET / user["cardioLevel"]
-		if not((ttimeTemp > time[1]) and not (len(includedExercises) == 0)):
-			workout.append(exc["exerciseName"])
-			totalTime = ttimeTemp
-	return workout
-
-"""
-workout var is list of [exercise,sets,reps] or [exercise,time(s) or dist(m)] like generated above
-want to use user's preferred units, base units are si
-"""
-def workoutToStringList(workout,user):
-	wkt = []
-	isWeights = workout[0][0]["exerciseClass"] == "strength"
-	isDist = False
-	for exercise in workout:
-		excname = exercise[0]["exerciseName"]
-		if isWeights:
-			excq = exercise[1] + "x" + exercise[2]
-		else:
-			excq = exercise[1] + " sec" if exercise[1] < 60 else ((exercise[1] / 60) + " min" if ((exercise[1]/60) < 60) else (exercise[1]/3600) + " hr")
-		wkt.append(excname + ", " + excq)
-	return wkt
-'''
+		#want to have mu st mu for someone whose C and S levels is the same as the recommendation
+		#if C == S, mu = recommended
+		#if C == 1 and S == 10, mu is low
+		#if C == 10 and S == 1, mu is high
+		#cap mu at something like 3x or 4x recommended
+		if(wkclass == 'strength'):
+			#randomly generate sets and reps according to a normal distribution with mean = 10 * BASE * (cardio / strengh) and stdev = (cardio + strength)/20
+			muSets = (1./5.) * float(exercise["baseSets"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
+			muReps = (1./5.) * float(exercise["baseReps"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
+			sig = float(user["cardioLevel"] + user["strengthLevel"])/20.
+			sets = int(round(stats.norm.rvs(loc=muSets,scale=sig,size=1)[0],0))
+			reps = int(round(stats.norm.rvs(loc=muReps,scale=sig,size=1)[0],0))
+			if sets < 1:
+				sets = 1
+			if reps < 1:
+				reps = 1
+			wkt["sets"].append(sets)
+			wkt["reps"].append(reps)
+		if(wkclass == 'cardio'):
+			muTime = 10. * float(exercise["baseTime"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
