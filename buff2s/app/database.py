@@ -3,6 +3,7 @@ from passlib.hash import pbkdf2_sha256 as pl
 # import heapq as hq
 import numpy as np
 from scipy import stats
+import random
 
 client = pymongo.MongoClient("localhost", 27017)
 db = client.buffs
@@ -72,10 +73,9 @@ def exerciseInUserFavorites(user,exercise):
 
 """
 required functions:
-getWorkout(wid,user): takes workout id returns proper formatted workout; save to database
+X getWorkout(wid,user): takes workout id returns proper formatted workout; save to database
 createWorkout(muscles): takes muscle list and generates db collection workout object
-XX dropWorkoutFromUserFavorites(wid,user): drops a workout from a user's favorites
-addWorkoutToUserFavorites(wid,user): Add the workout with id wid to user's favorites
+X addWorkoutToUserFavorites(wid,user): Add the workout with id wid to user's favorites
 """
 
 """
@@ -140,12 +140,19 @@ def getWorkoutFromIDForUser(workoutID,username):
 		#if C == 10 and S == 1, mu is high
 		#cap mu at something like 3x or 4x recommended
 		if(wkclass == 'strength'):
-			#randomly generate sets and reps according to a normal distribution with mean = 10 * BASE * (cardio / strengh) and stdev = (cardio + strength)/20
-			muSets = (1./5.) * float(exercise["baseSets"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
-			muReps = (1./5.) * float(exercise["baseReps"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
-			sig = float(user["cardioLevel"] + user["strengthLevel"])/20.
-			sets = int(round(stats.norm.rvs(loc=muSets,scale=sig,size=1)[0],0))
-			reps = int(round(stats.norm.rvs(loc=muReps,scale=sig,size=1)[0],0))
+			#randomly generate sets and reps according to a truncated normal distribution
+			#a = 1
+			#bs = 3*Bs
+			#br = 4*Br
+			muSets = (5./float(user["strengthLevel"])) + float(exercise["baseSets"]) - 1.
+			muReps = (5./float(user["strengthLevel"])) + float(exercise["baseReps"]) - 1.
+			a = 1.
+			bSets = 3.*float(exercise["baseSets"])
+			bReps = 4.*float(exercise["baseReps"])
+			sigSets = float(exercise["baseSets"])/4.
+			sigReps = float(exercise["baseReps"])/4.
+			sets = int(round(stats.truncnorm.rvs(a,bSets,loc=muSets,scale=sigSets,size=1)[0],0))
+			reps = int(round(stats.truncnorm.rvs(a,bReps,loc=muReps,scale=sigReps,size=1)[0],0))
 			if sets < 1:
 				sets = 1
 			if reps < 1:
@@ -153,4 +160,41 @@ def getWorkoutFromIDForUser(workoutID,username):
 			wkt["sets"].append(sets)
 			wkt["reps"].append(reps)
 		if(wkclass == 'cardio'):
-			muTime = 10. * float(exercise["baseTime"]) * (float(user["cardioLevel"])/float(user["strengthLevel"]))
+			muTime = (float(user["cardioLevel"])/5.) + float(exercise["baseTime"]) - 1.
+			a = 1.
+			bTime = 10.*float(exercise["baseTime"])
+			sigTime = float(exercise["baseTime"])/4.
+			time = int(round(stats.truncnorm.rvs(a, bTime, loc=muTime, scale=sigTime, size=1)[0], 0))
+			wkt["times"].append(time)
+
+
+"""
+Take a list of desired muscle groups (list of muscleIDs) to hit and make a generalized workout object. Insert that into the database and return its id.
+"""
+def createWorkout(muscleIDs, exerciseClass, workoutName):
+	#move the list of muscle ids to a list of actual muscle objects/dicts
+	# muscles = [db.muscles.find_one({"_id":muscleID}) for muscleID in muscleIDs]
+	muscleIDs = set(muscleIDs)
+	allExercises = db.exercises.find({})
+	viableExercises = []
+	for exercise in allExercises:
+		#trim this down to only the ones we care about
+		if exercise["exerciseClass"] == exerciseClass:
+			musclesMatch = False
+			for m in exercise["muscles"]:
+				if m in muscleIDs:
+					musclesMatch = True
+					break
+			if musclesMatch:
+				viableExercises.append(exercise)
+
+	#how long should the workout be?
+	#take a random variable for length according to TN(a=1,b=len(viableExercises),mu=6,sig=2)
+	workoutLength = int(round(stats.truncnorm.rvs(1,len(viableExercises),loc=6,scale=2),0))
+	viableExercises = random.shuffle(viableExercises)
+	exercises = viableExercises[:workoutLength]
+	existing = db.workouts.find_one({"exercises":exercises})
+	if existing is not None:
+		return existing["_id"]
+	insertInfo = db.workouts.insert_one({"exercises":exercises,"muscles":muscleIDs,"exerciseClass":exerciseClass,"workoutName":workoutName})
+	return insertInfo["inserted_id"]
