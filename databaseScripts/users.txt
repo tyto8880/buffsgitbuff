@@ -1,5 +1,0 @@
-db.Users.insertMany([
-{user_id:1, username:"tron", password:"hello", favorite_exercises:[3,4], favorite_workouts:[1,2]},
-{user_id:2, username:"alex", password:"wow", favorite_exercises:[40,4], favorite_workouts:[3,4]},
-{user_id:3, username:"pete", password:"password", favorite_exercises:[56,7], favorite_workouts:[2]}]);
-
