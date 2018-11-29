@@ -6,7 +6,7 @@ from scipy import stats
 import random
 
 client = pymongo.MongoClient("localhost", 27017)
-db = client.buffs
+db = client.test
 
 BASE_TIME_PER_REP = 3#seconds
 REST_TIME_BASE_SET = 5*60  # seconds
@@ -36,7 +36,7 @@ pwd is the user's password (not sure if we'd pass this or just the password hash
 def getUserInfo(uname):
 	info = db.users.find_one({"username": uname})
 	if not info:
-		return False
+		return None
 	return info
 
 
@@ -56,20 +56,25 @@ def createUser(uname, email, pwd):
 	return True
 
 
-# delete this user. Don't do anything if it doesn't exist or they had the wrong password
-def delUser(uname, pwd):
-	q = db.Users.find_one({"username":uname})
-	if (q is None) or not pl.verify(pwd,q["passwordHash"]):
+# delete this user. Don't do anything if it doesn't exist
+def deleteUser(uname):
+	q = db.users.find_one({"username":uname})
+	if q is None:
 		return False
-	db.Users.deleteOne({"_id":q["_id"]})
+	db.users.delete_one({"_id":q["_id"]})
+	return True
 
+'''
+I don't think this method's going to end up being used, so it's commented out for now. --Daniel
+'''
+'''
 def exerciseInUserFavorites(user,exercise):
 	favs = user["favoriteWorkouts"]
 	for workout in favs:
 		if exercise["exerciseID"] in workout["exercises"]:
 			return True
 	return False
-
+'''
 
 """
 required functions:
