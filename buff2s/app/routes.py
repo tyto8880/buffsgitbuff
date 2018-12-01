@@ -1,11 +1,10 @@
 # imports application module from app directory
 from app import app
-from flask import render_template, request, redirect, session
+from flask import Flask,render_template, request, redirect, session
 
 # local imports for some of that sweet sweet sugar
 import app.database as db
 import app.validation as validate
-
 
 @app.route('/user/<user>')
 def userdash(user):
@@ -56,9 +55,16 @@ def signup():
 
     return render_template('signup.html', error=error)
 
+@app.route( '/edit_Profile', methods=['GET', 'POST'])
+def edit_Profile():
+    error = None
+    if request.method == 'POST'
+    return render_template('edit_Profile.html')
+
 
 @app.route('/logout')
 def logout():
     if session['username']:
         session.clear()
     return redirect('/home')
+

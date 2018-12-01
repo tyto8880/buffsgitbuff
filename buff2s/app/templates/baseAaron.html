@@ -3,12 +3,16 @@
 <head>
     <meta charset = "utf-8">
     <title>
-        {% block title %}{% endblock %} - Buffs get Buff!
+         - Buffs get Buff!
     </title>
 
     <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static',filename = 'css.css')}}">
     <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static',filename = 'normalize.css')}}">
     <link rel= "stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/js/jquery-1.12.4.min.js">\x3C/script>')</script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body id="header_body">
 
@@ -38,7 +42,7 @@
                     Dropdown
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="{{ url_for('edit_Profile') }}">Edit Profile</a>
                     <a class="dropdown-item" href="#">Another action</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Something else here</a>
@@ -56,13 +60,14 @@
         </form>
     </div>
 </nav>
+<hr>
 </body>
 
-<body>
-<div class = "container-fluid" style = "min-height:100%">
-    {% block body %}{% endblock %}
+<div>
+    <body>
+    {% block content %}{% endblock %}
+    </body>
 </div>
-</body>
 
 <body style= "bottom: 0; vertical-align: center;">
 <p>
