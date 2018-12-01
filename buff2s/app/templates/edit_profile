@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<h3> First Name </h3>
+	<div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	    <span class="input-group-text" id="basic-addon1">@</span>
+	  </div>
+	  <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+	</div>
+	<h3> Last Name </h3>
+	<div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	    <span class="input-group-text" id="basic-addon1">@</span>
+	  </div>
+	  <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+	</div>
+	<h3> Sex </h3>
+	<div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+	    <div class="dropdown-menu">
+	      <a class="dropdown-item" href="#">Male</a>
+            <br>
+	      <a class="dropdown-item" href="#">Female</a>
+	    </div>
+	  </div>
+	  <input type="text" class="form-control" aria-label="Text input with dropdown button">
+	</div>
+	<!-- Height-->
+	<h3> Height </h3>
+	<div class="input-group mb-3">
+  		<div class="input-group-prepend">
+    		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">height</button>
+    		<div class="dropdown-menu">
+    			{% for i in range(3,7) %}
+    				{% for j in range(12) %}
+    					<a class="dropdown-item" href="#">{{ i }}'{{j}}"</a>
+                        <br>
+    				{% endfor %}
+    			{% endfor %}
+    		</div>
+  		</div>
+  	<input type="text" class="form-control" aria-label="Text input with dropdown button">
+	</div>
+	<h3> Weight </h3>
+		<div class="input-group mb-3">
+  		<div class="input-group-prepend">
+    		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Weight</button>
+    		<div class="dropdown-menu">
+    			{% for i in range(60,400) %}
+    				<a class="dropdown-item" href="#">{{ i }} lbs</a>
+                    <br>
+    			{% endfor %}
+    		</div>
+  		</div>
+  	<input type="text" class="form-control" aria-label="Text input with dropdown button">
+	</div>
+	<h3> Exercise Preferences </h3>
+	<p>
+		Rate how much priority you place in each category
+	</p>
+	<h4>Strength</h4>
+		<div class="dropdown">
+		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Dropdown button
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		  	{% for i in range(10) %}
+		    <a class="dropdown-item" href="#"> {{i}} </a>
+		    {% endfor %}
+		  </div>
+		</div>
+	<h4>Cardio</h4>
+		<div class="dropdown">
+		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Dropdown button
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		  	{% for i in range(10) %}
+		    <a class="dropdown-item" href="#"> {{i}} </a>
+		    {% endfor %}
+		  </div>
+		</div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+              <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Separated link</a>
+            </div>
+          </div>
+          <input type="text" class="form-control" aria-label="Text input with dropdown button">
+        </div>
+</body>
+</html>
