@@ -58,8 +58,8 @@ def signup():
 @app.route( '/edit_Profile', methods=['GET', 'POST'])
 def edit_Profile():
     error = None
-    if request.method == 'POST'
-    return render_template('edit_Profile.html')
+    if request.method == 'POST':
+	    return render_template('edit_Profile.html')
 
 
 @app.route('/logout')
