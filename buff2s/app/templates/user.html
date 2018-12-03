@@ -3,7 +3,54 @@
 {% block title %}{{ user.username }}'s Workout Page{% endblock %}
 
 {% block content %}
-<h1>
-    {{ user.username }}'s page!
-</h1>
+<h1>{{ user.username }}'s page!</h1>
+<div class="container">
+    <section id="workoutSection">
+        <h2>My Workouts</h2>
+        {% for workout in posts %}
+        #TODO need to implement get each workout for each workout number
+        # each workout will have attributes of workout from dbj
+        {% endfor %}
+    </section>
+    <section id="createWorkout">
+        <h2>Create a New Workout</h2>
+        <form>
+            Workout Name<input id="workoutName" name="workoutName" type="text"><br>
+            <input type="checkbox" name="Quads" >Quads<br>
+            <input type="checkbox" name="Hamstrings" >Hamstrings<br>
+            <input type="checkbox" name="Calves" >Calves<br>
+            <input type="checkbox" name="Chest" >Chest<br>
+            <input type="checkbox" name="Back" >Back<br>
+            <input type="checkbox" name="Shoulders" >Shoulder<br>
+            <input type="checkbox" name="Triceps" >Triceps<br>
+            <input type="checkbox" name="Biceps" >Biceps<br>
+            <input type="checkbox" name="Forearms" >Forearms<br>
+            <input type="checkbox" name="Trapezius" >Traps<br>
+            <input type="checkbox" name="Abs" >Abs<br>
+            <input type="checkbox" name="Glutes" >Glutes<br>
+            <input type="checkbox" name="Lats" >Lats<br>
+            <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
+            <script>
+                $(function () {
+                    $('button').click(function () {
+                        console.log("click registered");
+                        $.ajax({
+                            url: '/work',
+                            data: $('form').serialize(),
+                            type: 'POST',
+                            success: function (response) {
+                                console.log("success");
+                                console.log(response);
+                            },
+                            error: function (response) {
+                                console.log("error");
+                                console.log(response);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </form>
+    </section>
+</div>
 {% endblock %}

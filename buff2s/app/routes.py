@@ -1,6 +1,6 @@
 # imports application module from app directory
 from app import app
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, json
 
 # local imports for some of that sweet sweet sugar
 import app.database as db
@@ -9,18 +9,34 @@ import app.validation as validate
 # import for json used in asynchronous calls
 from flask import jsonify
 
-@app.route('/user/<user>')
+# Should probably return user workouts
+@app.route('/user/<user>', methods=['GET', 'POST'])
 def userdash(user):
     userInfo = db.getUserInfo(user)
-    return render_template('user.html', user=userInfo)
+    posts = []
+    # for each workout, add workout to posts that will display on page, get workoutj
+    return render_template('user.html', user=userInfo, posts=posts)
 
 # used for get workout call
-# @app.route('/getWorkout', methods=['POST'])
-# def getWorkout():
+@app.route('/work', methods=['POST'])
+def createWorkout():
+    print('made it to the method')
+    if request.method == 'POST':
+        try:
+            # biceps = request.form['Biceps']
+            print('it sorta works')
+        except:
+            print('shit')
+    return 'blank' # This is where you return your data!
+
 
 # used for displaying workouts on page
 # @app.route('/displayWorkouts', methods=['POST'])
 # def displayWorkouts():
+
+# used to add workout to database
+# @app.route('/addWorkout', methods=['POST'])
+# def addWorkout():
 
 # base webpage
 @app.route('/')
