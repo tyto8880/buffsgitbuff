@@ -6,12 +6,21 @@ from flask import render_template, request, redirect, session
 import app.database as db
 import app.validation as validate
 
+# import for json used in asynchronous calls
+from flask import jsonify
 
 @app.route('/user/<user>')
 def userdash(user):
     userInfo = db.getUserInfo(user)
     return render_template('user.html', user=userInfo)
 
+# used for get workout call
+# @app.route('/getWorkout', methods=['POST'])
+# def getWorkout():
+
+# used for displaying workouts on page
+# @app.route('/displayWorkouts', methods=['POST'])
+# def displayWorkouts():
 
 # base webpage
 @app.route('/')
