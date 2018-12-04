@@ -7,10 +7,7 @@
 <div class="container">
     <section id="workoutSection">
         <h2>My Workouts</h2>
-        {% for workout in posts %}
-        #TODO need to implement get each workout for each workout number
-        # each workout will have attributes of workout from dbj
-        {% endfor %}
+        <button id="getWorkoutButton" class="button" type="button">Get Workout</button>
     </section>
     <section id="createWorkout">
         <h2>Create a New Workout</h2>
@@ -32,18 +29,32 @@
             <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
             <script>
                 $(function () {
-                    $('button').click(function () {
-                        console.log("click registered");
+                    $('#createWorkoutButton').click(function () {
+                        console.log("create workout button");
                         $.ajax({
-                            url: '/work',
+                            url: '/userWorkout',
                             data: $('form').serialize(),
                             type: 'POST',
+                            // Do something with the response, post it to user page!!
                             success: function (response) {
-                                console.log("success");
                                 console.log(response);
+                                $('#newWorkout').append("<h3>This is your returned workout</h3><br><p>" + response + "</p>");
                             },
                             error: function (response) {
-                                console.log("error");
+                                console.log(response);
+                            }
+                        });
+                    });
+                    // Another button for get workouts can go here
+                    $('#getWorkoutButton').click(function() {
+                        console.log("get workout button");
+                        $.ajax({
+                            url: '/userWorkout',
+                            type: 'GET',
+                            success: function(response) {
+                                console.log(response);
+                            },
+                            error: function(response) {
                                 console.log(response);
                             }
                         });
@@ -51,6 +62,8 @@
                 });
             </script>
         </form>
+        <div class="hidden" id="newWorkout">
+        </div>
     </section>
 </div>
 {% endblock %}

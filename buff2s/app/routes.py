@@ -18,16 +18,22 @@ def userdash(user):
     return render_template('user.html', user=userInfo, posts=posts)
 
 # used for get workout call
-@app.route('/work', methods=['POST'])
+@app.route('/userWorkout', methods=['POST', 'GET'])
 def createWorkout():
-    print('made it to the method')
     if request.method == 'POST':
         try:
             # biceps = request.form['Biceps']
-            print('it sorta works')
+            return request.form['workoutName']
         except:
-            print('shit')
-    return 'blank' # This is where you return your data!
+            return 'error: create workout did not go through'
+    # the retun is logged into the respnse manage infromation from response in jquery
+    elif (request.method == 'GET'):
+        try:
+            return 'get user workouts'
+        except:
+             return 'get workout did not work correctly'
+        # want to have a get method for returning all user workouts
+    return 'error: not get or post request'
 
 
 # used for displaying workouts on page
