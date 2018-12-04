@@ -1,17 +1,10 @@
 import pymongo
 from passlib.hash import pbkdf2_sha256 as pl
-# import heapq as hq
-import numpy as np
 from scipy import stats
 import random
 
 client = pymongo.MongoClient("localhost", 27017)
-db = client.test
-
-BASE_TIME_PER_REP = 3#seconds
-REST_TIME_BASE_SET = 5*60  # seconds
-REST_TIME_BASE_REP = 40  # seconds
-EXERCISE_DROP_PROBABILITY = 0.05
+db = client.buffs
 
 class ExerciseNotDefinedException(Exception):
 	def __init__(self, text):
