@@ -29,6 +29,7 @@ def createWorkout():
     # the retun is logged into the respnse manage infromation from response in jquery
     elif (request.method == 'GET'):
         try:
+            # will want to return a jsonifyed version of the workouts
             return 'get user workouts'
         except:
              return 'get workout did not work correctly'
