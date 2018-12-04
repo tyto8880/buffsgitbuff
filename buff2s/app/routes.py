@@ -20,9 +20,11 @@ def userdash(user):
 # used for get workout call
 @app.route('/userWorkout', methods=['POST', 'GET'])
 def createWorkout():
+    print('success')
     if request.method == 'POST':
         try:
             # biceps = request.form['Biceps']
+            print('entered create workout' + request.form['workoutName'])
             return request.form['workoutName']
         except:
             return 'error: create workout did not go through'
@@ -88,9 +90,16 @@ def signup():
 
     return render_template('signup.html', error=error)
 
+@app.route( '/edit_Profile', methods=['GET', 'POST'])
+def edit_Profile():
+    error = None
+    if request.method == 'POST':
+	    return render_template('edit_Profile.html')
+
 
 @app.route('/logout')
 def logout():
     if session['username']:
         session.clear()
     return redirect('/home')
+
