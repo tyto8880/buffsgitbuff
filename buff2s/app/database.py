@@ -217,7 +217,7 @@ def createWorkout(muscleIDs, exerciseClass, workoutName):
 	#take a random variable for length according to TN(a=1,b=len(viableExercises),mu=6,sig=2)
 	workoutLength = int(round(stats.truncnorm.rvs(1,len(viableExercises),loc=6,scale=2),0))
 	random.shuffle(viableExercises)
-	exercises = [int(viableExercises[i]["_id"]) for i in range(max(len(viableExercises),workoutLength))]
+	exercises = [int(viableExercises[i]["_id"]) for i in range(min(len(viableExercises),workoutLength))]
 	existing = db.workouts.find_one({"exercises":exercises})
 	if existing is not None:
 		return existing["_id"]
