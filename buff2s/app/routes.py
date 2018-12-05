@@ -5,6 +5,7 @@ from flask import render_template, request, redirect, session, json
 # local imports for some of that sweet sweet sugar
 import app.database as db
 import app.validation as validate
+import app.helper as helper
 
 # import for json used in asynchronous calls
 from flask import jsonify
@@ -20,15 +21,18 @@ def userdash(user):
 # used for get workout call
 @app.route('/userWorkout', methods=['POST', 'GET'])
 def createWorkout():
-    print('success')
     if request.method == 'POST':
         try:
-            # biceps = request.form['Biceps']
-            print('entered create workout' + request.form['workoutName'])
-            return request.form['workoutName']
-        except:
+            muscles = helper.getMuscles(request.form)
+            name = request.form.get('workoutName')
+            workoutID = db.createWorkout(muscles, 'Strength', name)
+            print(workoutID)
+            workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
+            print(workout)
+            return jsonify(workout)
+        except Exception as e:
+            print(e)
             return 'error: create workout did not go through'
-    # the retun is logged into the respnse manage infromation from response in jquery
     elif (request.method == 'GET'):
         try:
             # will want to return a jsonifyed version of the workouts
@@ -87,7 +91,7 @@ def signup():
             error = 'Invalid username/password!'
         if not error:
             session['username'] = request.form['username']
-
+            return redirect('/user/<user>')
     return render_template('signup.html', error=error)
 
 @app.route( '/edit_Profile', methods=['GET', 'POST'])

@@ -29,15 +29,21 @@
             <li class="nav-item active">
                 <a class="nav-link" href= "{{ url_for('home') }}" >Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                {% if session['username'] %}
-                {% else %}
-                <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
-                {% endif %}
+            {% if session['username'] %}
+            <li class="nav_item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
             </li>
-            <li class="nav-item">
-                 <a class="nav-link" href= "{{ url_for('signup') }}" >Signup <span class="sr-only">(current)</span></a>
+            <li class="nav_item">
+                <a class="nav-link" href="{{ url_for('userdash', user=session['username']) }}">Your Page</a>
             </li>
+            {% else %}
+            <li class="nav_item">
+                <a class="nav-link" href="{{ url_for('login') }}">Log In</a>
+            </li>
+            <li class="nav_item">
+                <a class="nav-link" href= "{{ url_for('signup') }}" >Signup</a>
+            </li>
+            {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Dropdown
@@ -49,17 +55,7 @@
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>
             </li>
-            {% if session['username'] %}
-            <li>
-                <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
-                <a class="nav-link" href="{{ url_for('userdash', user=session['username']) }}">Your Page</a>
-            </li>
-            {% endif %}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
     </div>
 </nav>
 <hr>

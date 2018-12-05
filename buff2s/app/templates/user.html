@@ -13,6 +13,7 @@
         <h2>Create a New Workout</h2>
         <form>
             Workout Name<input id="workoutName" name="workoutName" type="text"><br>
+            <input type="checkbox" name="Misc">Misc<br>
             <input type="checkbox" name="Quads" >Quads<br>
             <input type="checkbox" name="Hamstrings" >Hamstrings<br>
             <input type="checkbox" name="Calves" >Calves<br>
@@ -22,7 +23,7 @@
             <input type="checkbox" name="Triceps" >Triceps<br>
             <input type="checkbox" name="Biceps" >Biceps<br>
             <input type="checkbox" name="Forearms" >Forearms<br>
-            <input type="checkbox" name="Trapezius" >Traps<br>
+            <input type="checkbox" name="Traps" >Traps<br>
             <input type="checkbox" name="Abs" >Abs<br>
             <input type="checkbox" name="Glutes" >Glutes<br>
             <input type="checkbox" name="Lats" >Lats<br>
@@ -38,6 +39,7 @@
                             // Do something with the response, post it to user page!!
                             success: function (response) {
                                 console.log(response);
+                                // want to append button so can add workout to user favorites
                                 $('#newWorkout').append("<h3>This is your returned workout</h3><br><p>" + response + "</p>");
                             },
                             error: function (response) {
