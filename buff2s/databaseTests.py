@@ -5,12 +5,16 @@ class databaseTester(unittest.TestCase):
 	
 	def testCreateUser(self):
 		db.deleteUser("Bobb")
+		db.deleteUser("manman")
 		#create user
 		ret = db.createUser("Bobb","bob@gmail.com","password")
 		self.assertTrue(ret)
 		#create existing user
 		ret = db.createUser("Bobb","bobby@gmail.com","mops")
 		self.assertFalse(ret)
+		#create another user
+		ret = db.createUser("manman","nope@nope.nope","password")
+		self.assertTrue(ret)
 	
 	def testGetUserInfo(self):
 		db.createUser("Bobb","bob@gmail.com","password")#create a user/make sure this one exists

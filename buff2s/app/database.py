@@ -39,7 +39,14 @@ def createUser(uname, email, pwd):
 		# a user with this username already exists
 		return False
 
-	newUID = db.users.count_documents({}) + 1
+	#in order to ensure that we don't collide _ids, we use the last thing in the database and add 1 to its _id
+	#for the sake of scalability, we might eventually want to find holes in the _ids
+	users = db.users.find({})
+	numUsers = db.users.count_documents({})
+	if numUsers == 0:
+		newUID = 1
+	else:
+		newUID = users[numUsers-1]["_id"]+1
 
 	passwordHash = pl.hash(pwd)  # salt included in the hash
 	db.users.insert_one({"_id":newUID,
@@ -217,6 +224,14 @@ def createWorkout(muscleIDs, exerciseClass, workoutName):
 	existing = db.workouts.find_one({"exercises":exercises})
 	if existing is not None:
 		return existing["_id"]
-	wid = db.workouts.count_documents({}) + 1
-	insertInfo = db.workouts.insert_one({"_id":wid,"exercises":exercises,"muscles":list(muscleIDs),"exerciseClass":exerciseClass,"workoutName":workoutName})
+
+	#get the new id. This part is overly defensive because we don't ever delete workouts but it'll be nice if we ever do want to delete workouts
+	workouts = db.workouts.find({})
+	numWorkouts = db.workouts.count_documents({})
+	if numWorkouts == 0:
+		newWID = 1
+	else:
+		newWID = workouts[numWorkouts - 1]["_id"] + 1
+
+	insertInfo = db.workouts.insert_one({"_id":newWID,"exercises":exercises,"muscles":list(muscleIDs),"exerciseClass":exerciseClass,"workoutName":workoutName})
 	return insertInfo.inserted_id
