@@ -39,8 +39,11 @@ def createUser(uname, email, pwd):
 		# a user with this username already exists
 		return False
 
+	maxIDDoc = db.users.count_documents({})
+
 	passwordHash = pl.hash(pwd)  # salt included in the hash
-	db.users.insert_one({"username": uname,
+	db.users.insert_one({"_id":maxIDDoc+1,
+						 "username": uname,
 						 "email":email,
 						"passwordHash": passwordHash,
 						"favoriteWorkouts": [],
@@ -214,5 +217,6 @@ def createWorkout(muscleIDs, exerciseClass, workoutName):
 	existing = db.workouts.find_one({"exercises":exercises})
 	if existing is not None:
 		return existing["_id"]
-	insertInfo = db.workouts.insert_one({"exercises":exercises,"muscles":list(muscleIDs),"exerciseClass":exerciseClass,"workoutName":workoutName})
+	wid = db.workouts.count_documents({}) + 1
+	insertInfo = db.workouts.insert_one({"_id":wid,"exercises":exercises,"muscles":list(muscleIDs),"exerciseClass":exerciseClass,"workoutName":workoutName})
 	return insertInfo.inserted_id
