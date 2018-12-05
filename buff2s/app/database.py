@@ -39,10 +39,10 @@ def createUser(uname, email, pwd):
 		# a user with this username already exists
 		return False
 
-	maxIDDoc = db.users.count_documents({})
+	newUID = db.users.count_documents({}) + 1
 
 	passwordHash = pl.hash(pwd)  # salt included in the hash
-	db.users.insert_one({"_id":maxIDDoc+1,
+	db.users.insert_one({"_id":newUID,
 						 "username": uname,
 						 "email":email,
 						"passwordHash": passwordHash,
