@@ -24,8 +24,14 @@ def createWorkout():
     if request.method == 'POST':
         try:
             muscles = helper.getMuscles(request.form)
+            print(muscles)
+            input = request.form['exerciseClass']
+            if (input == 'option1'):
+                 exerciseClass = 'strength'
+            else:
+                exerciseClass = 'cardio'
             name = request.form.get('workoutName')
-            workoutID = db.createWorkout(muscles, 'Strength', name)
+            workoutID = db.createWorkout(muscles, exerciseClass, name)
             print(workoutID)
             workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
             print(workout)
@@ -36,10 +42,15 @@ def createWorkout():
     elif (request.method == 'GET'):
         try:
             # will want to return a jsonifyed version of the workouts
-            return 'get user workouts'
+            userInfo = db.getUserInfo(session['username'])
+            workouts = userInfo['favoriteWorkouts']
+            userWorkouts = []
+            for workoutID in workouts:
+                workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
+                userWorkouts.append(workout)
+            return jsonify(userWorkouts)
         except:
              return 'get workout did not work correctly'
-        # want to have a get method for returning all user workouts
     return 'error: not get or post request'
 
 
@@ -91,14 +102,13 @@ def signup():
             error = 'Invalid username/password!'
         if not error:
             session['username'] = request.form['username']
-            return redirect('/user/<user>')
+            return redirect('/')
     return render_template('signup.html', error=error)
 
 @app.route( '/edit_Profile', methods=['GET', 'POST'])
 def edit_Profile():
     error = None
-    if request.method == 'POST':
-	    return render_template('edit_Profile.html')
+    return render_template('edit_Profile.html')
 
 
 @app.route('/logout')
@@ -106,4 +116,9 @@ def logout():
     if session['username']:
         session.clear()
     return redirect('/home')
+
+@app.route('/addWorkout')
+def addWorkout():
+    #adds workout to current session username
+    return 'click add workout'
 

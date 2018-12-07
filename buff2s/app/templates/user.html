@@ -8,6 +8,8 @@
     <section id="workoutSection">
         <h2>My Workouts</h2>
         <button id="getWorkoutButton" class="button" type="button">Get Workout</button>
+        <div id="userWorkouts">
+        </div>
     </section>
     <section id="createWorkout">
         <h2>Create a New Workout</h2>
@@ -27,6 +29,10 @@
             <input type="checkbox" name="Abs" >Abs<br>
             <input type="checkbox" name="Glutes" >Glutes<br>
             <input type="checkbox" name="Lats" >Lats<br>
+            <div class="classSelect">
+                <input type="radio" checked value="option1" name="exerciseClass">Strength<br>
+                <input type="radio" value="option2" name="exerciseClass">Cardio<br>
+            </div>
             <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
             <script>
                 $(function () {
@@ -40,7 +46,11 @@
                             success: function (response) {
                                 console.log(response);
                                 // want to append button so can add workout to user favorites
-                                $('#newWorkout').append("<h3>This is your returned workout</h3><br><p>" + response + "</p>");
+                                // TODO want a button to appear so they can add workout to their favorites, easy js call
+                                $('#newWorkout').append("<h4>This is your returned workout</h4><p>"
+                                    + response['workoutName'] + "<br>"
+                                    + response['workoutID']  + "<br>"
+                                    + "</p><button id='addWorkout' type='button' class='button'>Add Workout?</button");
                             },
                             error: function (response) {
                                 console.log(response);
@@ -55,12 +65,31 @@
                             type: 'GET',
                             success: function(response) {
                                 console.log(response);
+                                // a foreach loop over array of workouts, then same output as create workout for each workout`
+                                $('#userWorkouts').append("<h4>Workout for user!!!</h4><br><p>" + response + "</p>");
                             },
                             error: function(response) {
                                 console.log(response);
                             }
                         });
                     });
+                    // add workout button
+                    $('#addWorkout').click(function() {
+                        console.log("get workout button");
+                        $.ajax({
+                            url: '/addWorkout',
+                            // Somehow store workoutID
+                            //data:
+                            type: 'POST',
+                            success: function(response) {
+                                console.log(response);
+                            },
+                            error: function(response) {
+                                console.log(response);
+                            }
+                        });
+                    });
+
                 });
             </script>
         </form>
