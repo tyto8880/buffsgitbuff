@@ -1,16 +1,51 @@
 # imports application module from app directory
 from app import app
-from flask import Flask,render_template, request, redirect, session
+from flask import render_template, request, redirect, session, json
 
 # local imports for some of that sweet sweet sugar
 import app.database as db
 import app.validation as validate
 
-@app.route('/user/<user>')
+# import for json used in asynchronous calls
+from flask import jsonify
+
+# Should probably return user workouts
+@app.route('/user/<user>', methods=['GET', 'POST'])
 def userdash(user):
     userInfo = db.getUserInfo(user)
-    return render_template('user.html', user=userInfo)
+    posts = []
+    # for each workout, add workout to posts that will display on page, get workoutj
+    return render_template('user.html', user=userInfo, posts=posts)
 
+# used for get workout call
+@app.route('/userWorkout', methods=['POST', 'GET'])
+def createWorkout():
+    print('success')
+    if request.method == 'POST':
+        try:
+            # biceps = request.form['Biceps']
+            print('entered create workout' + request.form['workoutName'])
+            return request.form['workoutName']
+        except:
+            return 'error: create workout did not go through'
+    # the retun is logged into the respnse manage infromation from response in jquery
+    elif (request.method == 'GET'):
+        try:
+            # will want to return a jsonifyed version of the workouts
+            return 'get user workouts'
+        except:
+             return 'get workout did not work correctly'
+        # want to have a get method for returning all user workouts
+    return 'error: not get or post request'
+
+
+# used for displaying workouts on page
+# @app.route('/displayWorkouts', methods=['POST'])
+# def displayWorkouts():
+
+# used to add workout to database
+# @app.route('/addWorkout', methods=['POST'])
+# def addWorkout():
 
 # base webpage
 @app.route('/')
@@ -57,7 +92,9 @@ def signup():
 
 @app.route( '/edit_Profile', methods=['GET', 'POST'])
 def edit_Profile():
-    return render_template('edit_Profile.html')
+    error = None
+    if request.method == 'POST':
+	    return render_template('edit_Profile.html')
 
 
 @app.route('/logout')
