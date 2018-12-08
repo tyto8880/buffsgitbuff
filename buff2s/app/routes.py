@@ -5,6 +5,7 @@ from flask import render_template, request, redirect, session, json
 # local imports for some of that sweet sweet sugar
 import app.database as db
 import app.validation as validate
+import app.helper as helper
 
 # import for json used in asynchronous calls
 from flask import jsonify
@@ -20,22 +21,36 @@ def userdash(user):
 # used for get workout call
 @app.route('/userWorkout', methods=['POST', 'GET'])
 def createWorkout():
-    print('success')
     if request.method == 'POST':
         try:
-            # biceps = request.form['Biceps']
-            print('entered create workout' + request.form['workoutName'])
-            return request.form['workoutName']
-        except:
+            muscles = helper.getMuscles(request.form)
+            print(muscles)
+            input = request.form['exerciseClass']
+            if (input == 'option1'):
+                 exerciseClass = 'strength'
+            else:
+                exerciseClass = 'cardio'
+            name = request.form.get('workoutName')
+            workoutID = db.createWorkout(muscles, exerciseClass, name)
+            print(workoutID)
+            workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
+            print(workout)
+            return jsonify(workout)
+        except Exception as e:
+            print(e)
             return 'error: create workout did not go through'
-    # the retun is logged into the respnse manage infromation from response in jquery
     elif (request.method == 'GET'):
         try:
             # will want to return a jsonifyed version of the workouts
-            return 'get user workouts'
+            userInfo = db.getUserInfo(session['username'])
+            workouts = userInfo['favoriteWorkouts']
+            userWorkouts = []
+            for workoutID in workouts:
+                workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
+                userWorkouts.append(workout)
+            return jsonify(userWorkouts)
         except:
              return 'get workout did not work correctly'
-        # want to have a get method for returning all user workouts
     return 'error: not get or post request'
 
 
@@ -87,14 +102,13 @@ def signup():
             error = 'Invalid username/password!'
         if not error:
             session['username'] = request.form['username']
-
+            return redirect('/')
     return render_template('signup.html', error=error)
 
 @app.route( '/edit_Profile', methods=['GET', 'POST'])
 def edit_Profile():
     error = None
-    if request.method == 'POST':
-	    return render_template('edit_Profile.html')
+    return render_template('edit_Profile.html')
 
 
 @app.route('/logout')
@@ -102,4 +116,9 @@ def logout():
     if session['username']:
         session.clear()
     return redirect('/home')
+
+@app.route('/addWorkout')
+def addWorkout():
+    #adds workout to current session username
+    return 'click add workout'
 
