@@ -14,9 +14,24 @@
     <script>window.jQuery || document.write('<script src="/js/jquery-1.12.4.min.js">\x3C/script>')</script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!--if anyone's working on the css, you could chuck these in there-->
+<style>
+    html,body{
+        height:100%;
+    }
+    #mid{
+        height: 100%;
+        min-height: 100%;
+        background-image: url("{{ url_for('static', filename='gym.jpg') }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
 </head>
 <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
-<body id="header_body">
+<body id="header_body" style="position:static; top: 0;">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Buffs Git Buff!</a>
@@ -63,13 +78,15 @@
 <hr>
 </body>
 
-<div>
-    <body>
-    {% block content %}{% endblock %}
-    </body>
+<div id="mid" class="container-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-8" style="background-color:rgba(255,255,255,.8); min-height: 100%;padding: 50px;">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
 </div>
 
-<body style= "bottom: 0; text-align: center; height: 60px;">
+<body id = "footer" style= "bottom: 0; text-align: center; height: 60px; position: static;">
 <br>
 <p>
     &copy; BuffGitBuff Team 2018
@@ -77,7 +94,7 @@
 
 <a href = "http://twitter.com"> <img src = "{{ url_for('static', filename = 'twitter.png') }}" alt = "Twitter" style = "width:40px;height:40px;"></a>
 <a href = "http://facebook.com"> <img src = "{{ url_for('static', filename = 'facebook.png') }}" alt="Facebook" style = "width:40px;height:40px;"></a>
-<a href = "http://google.com"> <img src = "{{ url_for('static', filename = 'google.png.jpg') }}" alt = "Google" style = "width:40px;height:40px;"></a>
+<a href = "http://google.com"> <img src = "{{ url_for('static', filename = 'google.png') }}" alt = "Google" style = "width:40px;height:40px;"></a>
 
 </body>
 </html>

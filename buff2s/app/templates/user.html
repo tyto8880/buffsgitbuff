@@ -4,14 +4,19 @@
 
 {% block content %}
 <h1>{{ user.username }}'s page!</h1>
+    <br>
 <div class="container">
-    <section id="workoutSection">
-        <h2>My Workouts</h2>
-        <button id="getWorkoutButton" class="button" type="button">Get Workout</button>
-        <div id="userWorkouts">
+      <div class="row">
+        <div class="col-3">
+            <section id="workoutSection">
+                <h2>My Workouts</h2>
+                <button id="getWorkoutButton" class="button" type="button">Get Workout</button>
+                <div id="userWorkouts">
+                </div>
+            </section>
         </div>
-    </section>
-    <section id="createWorkout">
+        <div class="col-4">
+                <section id="createWorkout">
         <h2>Create a New Workout</h2>
         <form>
             Workout Name<input id="workoutName" name="workoutName" type="text"><br>
@@ -34,6 +39,10 @@
                 <input type="radio" value="option2" name="exerciseClass">Cardio<br>
             </div>
             <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
+        </form>
+                </section>
+        </div>
+        <div class="col-4">
             <script>
                 $(function () {
                     $('#createWorkoutButton').click(function () {
@@ -96,5 +105,7 @@
         <div id="newWorkout">
         </div>
     </section>
+        </div>
+      </div>
 </div>
 {% endblock %}
