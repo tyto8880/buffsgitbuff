@@ -111,14 +111,14 @@ Add the workoutID to this user's list of favorite workouts.
 def addWorkoutToUserFavorites(workoutID, username):
 	#get the actual dicts associated with this workout and username
 	user = db.users.find_one({"username":username})
-	workout = db.workouts.find_one({"_id":workoutID})
+	workout = db.workouts.find({"_id":workoutID})
 
 	if not (user and workout):
 		return False #either the user or the workout didn't exist
 
 	favs = user["favoriteWorkouts"]
 	favs.append(workoutID)
-	db.users.update_one({"_id":user["_id"]},{"$set":{"favoriteWorkouts":favs}})
+	db.users.update({"_id":user["_id"]},{"$set":{"favoriteWorkouts":favs}})
 	return True
 
 """

@@ -24,7 +24,6 @@ def createWorkout():
     if request.method == 'POST':
         try:
             muscles = helper.getMuscles(request.form)
-            print(muscles)
             input = request.form['exerciseClass']
             if (input == 'option1'):
                  exerciseClass = 'strength'
@@ -32,9 +31,7 @@ def createWorkout():
                 exerciseClass = 'cardio'
             name = request.form.get('workoutName')
             workoutID = db.createWorkout(muscles, exerciseClass, name)
-            print(workoutID)
             workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
-            print(workout)
             return jsonify(workout)
         except Exception as e:
             print(e)
@@ -46,7 +43,7 @@ def createWorkout():
             workouts = userInfo['favoriteWorkouts']
             userWorkouts = []
             for workoutID in workouts:
-                workout = db.getWorkoutFromIDForUser(workoutID, session['username'])
+                workout = db.getWorkoutFromIDForUser(int(workoutID), session['username'])
                 userWorkouts.append(workout)
             return jsonify(userWorkouts)
         except:
@@ -117,8 +114,15 @@ def logout():
         session.clear()
     return redirect('/home')
 
-@app.route('/addWorkout')
+@app.route('/addWorkout', methods=['POST'])
 def addWorkout():
     #adds workout to current session username
-    return 'click add workout'
+    try:
+        workoutID = request.form['id']
+        db.addWorkoutToUserFavorites(workoutID, session['username'])
+        return 'added workout'
+    except Exception as e:
+        print(e)
+        return 'workout not added'
+
 

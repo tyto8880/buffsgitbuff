@@ -56,13 +56,21 @@
                                 console.log(response);
                                 // want to append button so can add workout to user favorites
                                 // TODO want a button to appear so they can add workout to their favorites, easy js call
-                                $('#newWorkout').append("<h4>This is your returned workout</h4><p>"
-                                    + response['workoutName'] + "<br>"
-                                    + response['workoutID']  + "<br>"
-                                    + "</p><button id='addWorkout' type='button' class='button'>Add Workout?</button");
+                                var exercises = response['exercises'];
+                                var sets = response['sets'];
+                                var reps = response['reps'];
+                                var len = exercises.length;
+                                $('#newWorkout').append("<h4>This is your returned workout</h4><br>"
+                                    + response['workoutName'] + "<br>");
+                                for (var i = 0; i < len; i++) {
+                                    $('#newWorkout').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                                }
+                                // need to have hidden element holding exercise id
+                                $('#newWorkout').append("<button id='addWorkout' type='button' class='button' onclick='addWorkout(" + response['workoutID'] + ")'>Add Workout?</button></section>");
                             },
                             error: function (response) {
                                 console.log(response);
+                                $('#newWorkout').append("<h4>The server had an error, try again</h4>");
                             }
                         });
                     });
@@ -73,33 +81,46 @@
                             url: '/userWorkout',
                             type: 'GET',
                             success: function(response) {
+                                $('#userWorkouts').empty();
+                                $('#userWorkouts').append("<h4>Your Workouts</h4><p>");
                                 console.log(response);
-                                // a foreach loop over array of workouts, then same output as create workout for each workout`
-                                $('#userWorkouts').append("<h4>Workout for user!!!</h4><br><p>" + response + "</p>");
+                                for (number in response) {
+                                    var workout = response[number];
+                                    console.log(workout);
+                                    var exercises = workout['exercises'];
+                                    var sets = workout['sets'];
+                                    var reps = workout['reps'];
+                                    var len = exercises.length;
+                                    $('#userWorkouts').append(workout['workoutName'] + "<br>");
+                                    for (var i = 0; i < len; i++) {
+                                        $('#userWorkouts').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                                    }
+                                    $('#userWorkouts').append("</p>");
+                                }
                             },
                             error: function(response) {
                                 console.log(response);
                             }
                         });
                     });
-                    // add workout button
-                    $('#addWorkout').click(function() {
-                        console.log("get workout button");
-                        $.ajax({
-                            url: '/addWorkout',
-                            // Somehow store workoutID
-                            //data:
-                            type: 'POST',
-                            success: function(response) {
-                                console.log(response);
-                            },
-                            error: function(response) {
-                                console.log(response);
-                            }
-                        });
-                    });
-
                 });
+                function addWorkout(number) {
+                    console.log("add workout button");
+                    $('#newWorkout').empty();
+                    var text = {"id": number};
+                    $.ajax({
+                        url: '/addWorkout',
+                        // Somehow store workoutID
+                        data: text,
+                        type: 'POST',
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(response) {
+                            console.log(response);
+                        }
+                    });
+                }
             </script>
         </form>
         <div id="newWorkout">
