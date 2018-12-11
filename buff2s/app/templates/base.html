@@ -56,17 +56,18 @@
                  <a class="nav-link" href= "{{ url_for('signup') }}" >Signup <span class="sr-only">(current)</span></a>
                 {% endif %}
             </li>
+            {% if session['username'] %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Dropdown
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ url_for('edit_Profile') }}">Edit Profile</a>
                     <a class="dropdown-item" href="{{ url_for('userdash', user=session['username']) }}">Your Page</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="{{ url_for('edit_Profile') }}">Edit Profile</a>
                 </div>
             </li>
+            {% endif %}
             {% if session['username'] %}
             <li>
                 <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>

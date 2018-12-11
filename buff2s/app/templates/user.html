@@ -3,6 +3,92 @@
 {% block title %}{{ user.username }}'s Workout Page{% endblock %}
 
 {% block content %}
+<!-- Script for handling add/create/get workout -->
+<script>
+    $(function () {
+        // create a workout button action
+        $('#createWorkoutButton').click(function () {
+            console.log("create workout button");
+            // call to flask routes
+            $.ajax({
+                url: '/userWorkout',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function (response) {
+                    // post workout (response) to user page
+                    console.log(response);
+                    var exercises = response['exercises'];
+                    var sets = response['sets'];
+                    var reps = response['reps'];
+                    var len = exercises.length;
+                    $('#newWorkout').append("<h4>This is your returned workout</h4><br>"
+                        + response['workoutName'] + "<br>");
+                    for (var i = 0; i < len; i++) {
+                        $('#newWorkout').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                    }
+                    // This button implements the add workout function
+                    $('#newWorkout').append("<button id='addWorkout' type='button' class='button' onclick='addWorkout(" + response['workoutID'] + ")'>Add Workout?</button></section>");
+                },
+                error: function (response) {
+                    console.log(response);
+                    $('#newWorkout').append("<h4>The server had an error, try again</h4>");
+                }
+            });
+        });
+        // button for get workouts, posts all favorited workouts to user page
+        $('#getWorkoutButton').click(function() {
+            console.log("get workout button");
+            // call to routes get workout
+            $.ajax({
+                url: '/userWorkout',
+                type: 'GET',
+                success: function(response) {
+                    // posts all workouts, will refresh on click
+                    $('#userWorkouts').empty();
+                    $('#userWorkouts').append("<h4>Your Workouts</h4><p>");
+                    console.log(response);
+                    for (number in response) {
+                        var workout = response[number];
+                        console.log(workout);
+                        var exercises = workout['exercises'];
+                        var sets = workout['sets'];
+                        var reps = workout['reps'];
+                        var len = exercises.length;
+                        $('#userWorkouts').append(workout['workoutName'] + "<br>");
+                        for (var i = 0; i < len; i++) {
+                            $('#userWorkouts').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                        }
+                        $('#userWorkouts').append("</p>");
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+    });
+    // function for adding a workout to user favorites
+    function addWorkout(number) {
+        console.log("add workout button");
+        // clears current text on user page
+        $('#newWorkout').empty();
+        var text = {"id": number};
+        // add workout call to flask
+        $.ajax({
+            url: '/addWorkout',
+            // Somehow store workoutID
+            data: text,
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    }
+</script>
+<!-- Begin actual Html page -->
 <h1>{{ user.username }}'s page!</h1>
     <br>
 <div class="container">
@@ -11,121 +97,42 @@
             <section id="workoutSection">
                 <h2>My Workouts</h2>
                 <button id="getWorkoutButton" class="button" type="button">Get Workout</button>
+                <!-- This div contains user workouts when pressed -->
                 <div id="userWorkouts">
                 </div>
             </section>
         </div>
         <div class="col-4">
                 <section id="createWorkout">
-        <h2>Create a New Workout</h2>
-        <form>
-            Workout Name<input id="workoutName" name="workoutName" type="text"><br>
-            <input type="checkbox" name="Misc">Misc<br>
-            <input type="checkbox" name="Quads" >Quads<br>
-            <input type="checkbox" name="Hamstrings" >Hamstrings<br>
-            <input type="checkbox" name="Calves" >Calves<br>
-            <input type="checkbox" name="Chest" >Chest<br>
-            <input type="checkbox" name="Back" >Back<br>
-            <input type="checkbox" name="Shoulders" >Shoulder<br>
-            <input type="checkbox" name="Triceps" >Triceps<br>
-            <input type="checkbox" name="Biceps" >Biceps<br>
-            <input type="checkbox" name="Forearms" >Forearms<br>
-            <input type="checkbox" name="Traps" >Traps<br>
-            <input type="checkbox" name="Abs" >Abs<br>
-            <input type="checkbox" name="Glutes" >Glutes<br>
-            <input type="checkbox" name="Lats" >Lats<br>
-            <div class="classSelect">
-                <input type="radio" checked value="option1" name="exerciseClass">Strength<br>
-                <input type="radio" value="option2" name="exerciseClass">Cardio<br>
-            </div>
-            <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
-        </form>
+                    <h2>Create a New Workout</h2>
+                        <form>
+                            Workout Name<input id="workoutName" name="workoutName" type="text"><br>
+                            <input type="checkbox" name="Misc">Misc<br>
+                            <input type="checkbox" name="Quads" >Quads<br>
+                            <input type="checkbox" name="Hamstrings" >Hamstrings<br>
+                            <input type="checkbox" name="Calves" >Calves<br>
+                            <input type="checkbox" name="Chest" >Chest<br>
+                            <input type="checkbox" name="Back" >Back<br>
+                            <input type="checkbox" name="Shoulders" >Shoulder<br>
+                            <input type="checkbox" name="Triceps" >Triceps<br>
+                            <input type="checkbox" name="Biceps" >Biceps<br>
+                            <input type="checkbox" name="Forearms" >Forearms<br>
+                            <input type="checkbox" name="Traps" >Traps<br>
+                            <input type="checkbox" name="Abs" >Abs<br>
+                            <input type="checkbox" name="Glutes" >Glutes<br>
+                            <input type="checkbox" name="Lats" >Lats<br>
+                            <div class="classSelect">
+                                <input type="radio" checked value="option1" name="exerciseClass">Strength<br>
+                                <input type="radio" value="option2" name="exerciseClass">Cardio<br>
+                            </div>
+                            <button id="createWorkoutButton" class="button" type="button">Create New Workout</button>
+                        </form>
                 </section>
         </div>
         <div class="col-4">
-            <script>
-                $(function () {
-                    $('#createWorkoutButton').click(function () {
-                        console.log("create workout button");
-                        $.ajax({
-                            url: '/userWorkout',
-                            data: $('form').serialize(),
-                            type: 'POST',
-                            // Do something with the response, post it to user page!!
-                            success: function (response) {
-                                console.log(response);
-                                // want to append button so can add workout to user favorites
-                                // TODO want a button to appear so they can add workout to their favorites, easy js call
-                                var exercises = response['exercises'];
-                                var sets = response['sets'];
-                                var reps = response['reps'];
-                                var len = exercises.length;
-                                $('#newWorkout').append("<h4>This is your returned workout</h4><br>"
-                                    + response['workoutName'] + "<br>");
-                                for (var i = 0; i < len; i++) {
-                                    $('#newWorkout').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
-                                }
-                                // need to have hidden element holding exercise id
-                                $('#newWorkout').append("<button id='addWorkout' type='button' class='button' onclick='addWorkout(" + response['workoutID'] + ")'>Add Workout?</button></section>");
-                            },
-                            error: function (response) {
-                                console.log(response);
-                                $('#newWorkout').append("<h4>The server had an error, try again</h4>");
-                            }
-                        });
-                    });
-                    // Another button for get workouts can go here
-                    $('#getWorkoutButton').click(function() {
-                        console.log("get workout button");
-                        $.ajax({
-                            url: '/userWorkout',
-                            type: 'GET',
-                            success: function(response) {
-                                $('#userWorkouts').empty();
-                                $('#userWorkouts').append("<h4>Your Workouts</h4><p>");
-                                console.log(response);
-                                for (number in response) {
-                                    var workout = response[number];
-                                    console.log(workout);
-                                    var exercises = workout['exercises'];
-                                    var sets = workout['sets'];
-                                    var reps = workout['reps'];
-                                    var len = exercises.length;
-                                    $('#userWorkouts').append(workout['workoutName'] + "<br>");
-                                    for (var i = 0; i < len; i++) {
-                                        $('#userWorkouts').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
-                                    }
-                                    $('#userWorkouts').append("</p>");
-                                }
-                            },
-                            error: function(response) {
-                                console.log(response);
-                            }
-                        });
-                    });
-                });
-                function addWorkout(number) {
-                    console.log("add workout button");
-                    $('#newWorkout').empty();
-                    var text = {"id": number};
-                    $.ajax({
-                        url: '/addWorkout',
-                        // Somehow store workoutID
-                        data: text,
-                        type: 'POST',
-                        success: function(response) {
-                            console.log(response);
-                        },
-                        error: function(response) {
-                            console.log(response);
-                        }
-                    });
-                }
-            </script>
-        </form>
-        <div id="newWorkout">
-        </div>
-    </section>
+            <!-- div for returned create workout -->
+            <div id="newWorkout">
+            </div>
         </div>
       </div>
 </div>

@@ -1,3 +1,4 @@
+# simple helper function for translating array of muscles into numbers
 def getMuscles(form):
     listMuscles = []
     muscleID = {
