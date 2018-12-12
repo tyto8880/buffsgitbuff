@@ -1,3 +1,152 @@
 {% extends 'base.html' %}
+{% block content %}
+<head>
+    <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      color: #707070;
+    }
 
-{% block title %}Home{% endblock %}
+    h1, h2, h3 {
+      color: #FF941D;
+    }
+
+    a {
+      border-bottom: 1px dotted #707070;
+      text-decoration: none;
+      color: #BFBFBF;
+    }
+
+    strong {
+      color: #bdbdbd;
+    }
+
+    .post {
+      margin-bottom: 9px;
+      padding: 20px 40px 20px 60px;
+    }
+
+    .post h2, .post h3 {
+      margin-left: -40px;
+      text-align: center;
+    }
+
+    #header {
+      width: 600px;
+      height: 280px;
+      margin: 0 auto;
+      background: url(images/images.jpeg);
+    }
+
+    #header h1 {
+      text-align: center;
+        top: 40px;
+      margin: 0;
+      font-size: 48px;
+    }
+
+    #header h2 {
+      text-align: center;
+      margin: 0;
+      padding: 0 0 0 92px;
+      font-size: 24px;
+    }
+
+    #header a {
+      border: none;
+      letter-spacing: -1px;
+      color: #FF941D;
+    }
+
+    #content {
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    #colOne {
+        background-color: rgba(255,255,255,.75);
+      top: 125px;
+      right:500px;
+        position: absolute;
+        width: 390px;
+    }
+
+    #colOne ul {
+      margin-left: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    #colTwo {
+      background-color: rgba(255,255,255,.75);
+      top: 100px;
+      left:500px;
+        position: absolute;
+        width: 390px;
+    }
+
+    #footer {
+        position: absolute;
+        bottom:60px;
+        left: 275px;
+      clear: both;
+      width: 580px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+
+    #footer p {
+      margin: 0;
+      text-align: center;
+      font-size: 12px;
+    }
+  </style>
+
+<title>BuffsgitBuff</title>
+</head>
+    <div class=""container>
+    <div class="container-fluid" id="header">
+      <h1><a href="#">BuffsGitBuff</a></h1>
+    </div>
+    <div id="content">
+      <div class="col" id="colOne">
+        <div id="menu">
+          <h3>Meet The Team</h3>
+          <strong>
+          <p>Aaron L.</p>
+          <p>Casey D.</p>
+          <p>Carlos S.</p>
+          <p>Daniel T.</p>
+          <p>Tyler T.</p>
+          <p>Willem M.</p>
+          </strong>
+          <h3> About</h3>
+          <p>University of Colorado Boulder</p>
+        </div>
+      </div>
+      <div class="col" id="colTwo">
+        <div class="post">
+          <h2>Welcome to BuffsGitBuff!</h2>
+          <p> <strong>Join the Buff Team! </strong> Help us… Make A Difference! We believe what we create here through our platform,  workout plans, and insight can make a difference in people’s lives.</p>
+        </div>
+        <div class="post">
+          <h3>Mission Statement</h3>
+          <p> BuffsgitBuff will allow for the accessibility of creating a workout plan. Through the
+    creation of an account, one will have the access of hundreds of workout plans to fit the user
+    leading to a customizable experience. We understand that every user is unique and has different
+    needs in their daily routine. Our platform leads anyone to be able to have an idea where they
+    stand personally in their physique.
+    Given this experience the user will be able to understand that there is no needed previous
+    knowledge to find their personal workout plan. We stand behind our core value in being able to
+    plan it out for the user to alleviate the pressure on anyone’s first milestone when pursuing a
+    physical goal through exercise.</p>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <p><strong>Copyright &copy; University of Colorado at Boulder</strong></a></p>
+    </div>
+    </div>
+{% endblock %}
