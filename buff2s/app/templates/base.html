@@ -21,7 +21,6 @@
         height:100%;
     }
     #mid{
-        height: 100%;
         min-height: 100%;
         background-image: url("{{ url_for('static', filename='gym.jpg') }}");
         background-repeat: no-repeat;
@@ -81,21 +80,28 @@
 
 <div id="mid" class="container-fluid">
     <div class="row justify-content-md-center">
-        <div class="col-8" style="background-color:rgba(255,255,255,.8); min-height: 100%;padding: 50px;">
+        <div class="col-9" style="min-height: 800px; background-color:rgba(255,255,255,.8);padding: 50px;">
             {% block content %}{% endblock %}
         </div>
     </div>
 </div>
 
-<body id = "footer" style= "bottom: 0; text-align: center; height: 60px; position: static;">
-<br>
-<p>
-    &copy; BuffGitBuff Team 2018
-</p>
+<body id = "footer" style= "bottom: 5px; vertical-align: middle; position: static;">
+    <br>
+    <p>
+        &copy; BuffGitBuff Team 2018
+    </p>
+    <div class="container">
+      <div class="row">
+        <div class="col-5">
 
-<a href = "http://twitter.com"> <img src = "{{ url_for('static', filename = 'twitter.png') }}" alt = "Twitter" style = "width:40px;height:40px;"></a>
-<a href = "http://facebook.com"> <img src = "{{ url_for('static', filename = 'facebook.png') }}" alt="Facebook" style = "width:40px;height:40px;"></a>
-<a href = "http://google.com"> <img src = "{{ url_for('static', filename = 'google.png') }}" alt = "Google" style = "width:40px;height:40px;"></a>
-
+        </div>
+        <div class="col-6">
+            <a href = "http://twitter.com"> <img src = "{{ url_for('static', filename = 'twitter.png') }}" alt = "Twitter"  style = "width:40px;height:40px;"></a>
+            <a href = "http://facebook.com"> <img src = "{{ url_for('static', filename = 'facebook.png') }}" alt="Facebook"  style = "width:40px;height:40px;"></a>
+            <a href = "http://google.com"> <img src = "{{ url_for('static', filename = 'google.png') }}" alt = "Google"  style = "width:40px;height:40px;"></a>
+        </div>
+      </div>
+    </div>
 </body>
 </html>
