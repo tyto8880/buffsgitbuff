@@ -18,13 +18,25 @@
                     // post workout (response) to user page
                     console.log(response);
                     var exercises = response['exercises'];
-                    var sets = response['sets'];
-                    var reps = response['reps'];
+                    var type = true;
+                    if (response['sets']){
+                        var sets = response['sets'];
+                        var reps = response['reps'];
+                    } else {
+                        type = false;
+                        var times = response['times'];
+                    }
                     var len = exercises.length;
-                    $('#newWorkout').append("<h4>This is your returned workout</h4><br>"
-                        + response['workoutName'] + "<br>");
-                    for (var i = 0; i < len; i++) {
-                        $('#newWorkout').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                    $('#newWorkout').append("<h4><b>This is your returned workout</h4><br>"
+                        + response['workoutName'] + "</b><br>");
+                    if (type) {
+                        for (var i = 0; i < len; i++) {
+                            $('#newWorkout').append("Exercise " + (i + 1) + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                        }
+                    } else {
+                        for (var i = 0; i < len; i++) {
+                            $('#newWorkout').append("Exercise " + (i + 1) + ":" + exercises[i] + ", for " + times[i] + " seconds<br>");
+                        }
                     }
                     // This button implements the add workout function
                     $('#newWorkout').append("<button id='addWorkout' type='button' class='button' onclick='addWorkout(" + response['workoutID'] + ")'>Add Workout?</button></section>");
@@ -47,16 +59,29 @@
                     $('#userWorkouts').empty();
                     $('#userWorkouts').append("<h4>Your Workouts</h4><p>");
                     console.log(response);
-                    for (number in response) {
-                        var workout = response[number];
+                    for (i in response) {
+                        var workout = response[i];
                         console.log(workout);
                         var exercises = workout['exercises'];
-                        var sets = workout['sets'];
-                        var reps = workout['reps'];
+                        var type = true;
+                        if (workout['sets']){
+                            var sets = workout['sets'];
+                            var reps = workout['reps'];
+                        } else {
+                            type = false;
+                            var times = workout['times'];
+                        }
                         var len = exercises.length;
-                        $('#userWorkouts').append(workout['workoutName'] + "<br>");
-                        for (var i = 0; i < len; i++) {
-                            $('#userWorkouts').append("Exercise " + i + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                        $('#userWorkouts').append("<h5><b>Workout " + (Number(i)+1) + "</h5><br>"
+                            + workout['workoutName'] + "</b><br>");
+                        if (type) {
+                            for (var i = 0; i < len; i++) {
+                                $('#userWorkouts').append("Exercise " + (i + 1) + ":" + exercises[i] + ", with " + sets[i] + "sets and " + reps[i] + "reps<br>");
+                            }
+                        } else {
+                            for (var i = 0; i < len; i++) {
+                                $('#userWorkouts').append("Exercise " + (i + 1) + ":" + exercises[i] + ", for " + times[i] + " seconds<br>");
+                            }
                         }
                         $('#userWorkouts').append("</p>");
                     }
